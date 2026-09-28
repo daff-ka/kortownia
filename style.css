@@ -843,6 +843,46 @@ html.is-loaded :is(.nav, .hero__title, .hero__plus, .hero__copy, .corner-nav, .s
 .corner-nav,
 .surface-switch { --intro-delay: 0.7s; }
 
+/* ---------- Podpis autorów modeli 3D (CC BY 4.0) ----------
+   Maksymalnie dyskretnie: desktop – środek samego dołu ekranu,
+   mobile – koniec strony. */
+
+.credits {
+    position: fixed;
+    left: 50%;
+    bottom: 12px;
+    translate: -50% 0;
+    font-size: 10px;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    color: var(--kreda);
+    opacity: 0.3;
+    transition: opacity 0.2s ease;
+    z-index: 10;
+}
+
+.credits:hover,
+.credits:focus-within {
+    opacity: 0.85;
+}
+
+.credits a {
+    color: inherit;
+}
+
+.credits__sep {
+    margin: 0 6px;
+}
+
+.credits a:hover {
+    text-decoration: underline;
+}
+
+html.is-loading .credits {
+    opacity: 0;
+}
+
 /* ---------- Menu mobilne ---------- */
 
 .mobile-menu {
@@ -965,7 +1005,15 @@ html.is-loaded :is(.nav, .hero__title, .hero__plus, .hero__copy, .corner-nav, .s
         transform: translateY(-4px) rotate(-45deg);
     }
 
-    body.menu-open :is(.hero, .court-grid, .court-lines) {
+    .credits {
+        position: static;
+        translate: none;
+        margin-top: 24px;
+        text-align: center;
+        white-space: normal;
+    }
+
+    body.menu-open :is(.hero, .court-grid, .court-lines, .credits) {
         visibility: hidden;
     }
 

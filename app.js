@@ -42,6 +42,7 @@ const translations = {
         surfaceHard: 'Twardy',
         menuOpen: 'Otwórz menu',
         menuClose: 'Zamknij menu',
+        credits: 'Modele 3D · CC BY',
     },
     en: {
         navLabel: 'Main',
@@ -61,6 +62,7 @@ const translations = {
         surfaceHard: 'Hard',
         menuOpen: 'Open menu',
         menuClose: 'Close menu',
+        credits: '3D models · CC BY',
     },
 };
 
