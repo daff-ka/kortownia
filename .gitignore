@@ -1,0 +1,5 @@
+.DS_Store
+
+# Oryginalne, nieskompresowane modele (strona używa wersji z img/3d/)
+img/tennis_ball.glb
+img/tennis_racket_wilson_blade.glb

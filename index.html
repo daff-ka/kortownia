@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pl" data-surface="twardy" data-grid="court">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        // Preloader: aktywny tylko z JS. Awaryjnie odsłania stronę, gdyby
+        // moduł preloadera się nie uruchomił (np. zablokowany CDN).
+        document.documentElement.classList.add('is-loading');
+        setTimeout(function () {
+            var r = document.documentElement;
+            if (window.__preloaderAlive || r.classList.contains('is-loaded')) return;
+            r.classList.remove('is-loading');
+            r.classList.add('is-loaded');
+            var p = document.getElementById('preloader');
+            if (p) p.remove();
+        }, 12000);
+        // Porównanie wariantów gridu: ?grid=figma | ?grid=court
+        var g = new URLSearchParams(location.search).get('grid');
+        if (g === 'figma' || g === 'court') document.documentElement.dataset.grid = g;
+        try {
+            var s = localStorage.getItem('kortownia-surface');
+            if (s === 'ceglany' || s === 'twardy') document.documentElement.dataset.surface = s;
+        } catch (e) {}
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@150,900&family=Atkinson+Hyperlegible+Next:wght@400;500;700&family=BBH+Bartle&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="preload" href="img/3d/racket.glb" as="fetch" type="model/gltf-binary" crossorigin media="(min-width: 1024px)">
+    <link rel="preload" href="img/3d/ball.glb" as="fetch" type="model/gltf-binary" crossorigin media="(min-width: 1024px)">
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+            }
+        }
+    </script>
+    <title>Kortownia – szkoła tenisa</title>
+    <meta name="description" content="Treningi tenisa indywidualne i w małych grupach – od pierwszego odbicia po pierwszy mecz ze znajomymi.">
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="img/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+</head>
+
+<body>
+
+    <div class="preloader" id="preloader" aria-hidden="true">
+        <div class="preloader__stage">
+            <div class="preloader__ball"></div>
+        </div>
+        <!-- Licznik % tymczasowo ukryty – usuń „hidden”, żeby go przywrócić. -->
+        <div class="preloader__count" hidden><span data-count>000</span>%</div>
+    </div>
+
+    <!-- Tło: rozmyte ukośne cienie (BG-shadow) + ziarno -->
+    <div class="bg" aria-hidden="true">
+        <svg class="bg__svg bg__svg--desktop" width="2109" height="1100" viewBox="0 0 2109 1100" overflow="visible">
+            <defs>
+                <filter id="bg-blur" filterUnits="userSpaceOnUse" x="-3000" y="-3000" width="7000" height="7000">
+                    <feGaussianBlur stdDeviation="60" />
+                </filter>
+            </defs>
+            <g id="bg-shapes" filter="url(#bg-blur)" fill="#000">
+                <rect x="-2157.266" y="-1301.834" width="2635.036" height="1456.137" opacity=".26" transform="rotate(-44.04 -839.748 -573.765)" />
+                <rect x="-1206.129" y="364.943" width="2635.036" height="147.119" opacity=".26" transform="rotate(-38.43 111.389 438.502)" />
+                <rect x="-747.009" y="730.633" width="2635.036" height="147.119" opacity=".26" transform="rotate(-38.43 570.509 804.192)" />
+                <rect x="-1000.589" y="479.723" width="2635.036" height="147.119" opacity=".26" transform="rotate(-38.43 316.929 553.282)" />
+                <rect x="-851.658" y="554.919" width="2635.036" height="147.119" opacity=".26" transform="rotate(-90 465.86 628.478)" />
+            </g>
+            <rect x="510.53" y="1472.8" width="2635.036" height="479.466" opacity=".26" transform="rotate(-61.13 1828.05 1712.53)" filter="url(#bg-blur)" />
+        </svg>
+        <svg class="bg__svg bg__svg--mobile" width="390" height="868" viewBox="0 0 487.5 1085" overflow="visible">
+            <use href="#bg-shapes" />
+        </svg>
+        <div class="bg__noise"></div>
+    </div>
+
+    <!-- Kort (propozycja): linie wg przepisów, rozpięte na układzie strony.
+         Wersja z Figmy: data-grid="figma" na <html> albo ?grid=figma w adresie. -->
+    <div class="court-grid" aria-hidden="true">
+        <i class="cg-line cg-line--outer is-h" style="--x:0%;--y:0%;--w:100%;--h:1px"></i>
+        <i class="cg-line cg-line--outer is-h" style="--x:0%;--y:calc(100% - 1px);--w:100%;--h:1px"></i>
+        <i class="cg-line cg-line--outer is-v" style="--x:0%;--y:0%;--w:1px;--h:100%"></i>
+        <i class="cg-line cg-line--outer is-v" style="--x:calc(100% - 1px);--y:0%;--w:1px;--h:100%"></i>
+        <i class="cg-line cg-line--net is-v" style="--x:50%;--y:-8.33%;--w:1px;--h:116.66%"></i>
+        <i class="cg-line cg-line--singles is-h" style="--x:0%;--y:12.49%;--w:100%;--h:1px"></i>
+        <i class="cg-line cg-line--singles is-h" style="--x:0%;--y:87.51%;--w:100%;--h:1px"></i>
+        <i class="cg-line cg-line--service is-v" style="--x:23.08%;--y:12.49%;--w:1px;--h:75.02%"></i>
+        <i class="cg-line cg-line--service is-v" style="--x:76.92%;--y:12.49%;--w:1px;--h:75.02%"></i>
+        <i class="cg-line cg-line--center is-h" style="--x:23.08%;--y:50%;--w:53.84%;--h:1px"></i>
+        <i class="cg-line cg-line--mark is-h" style="--x:0%;--y:50%;--w:14px;--h:1px"></i>
+        <i class="cg-line cg-line--mark is-h" style="--x:calc(100% - 14px);--y:50%;--w:14px;--h:1px"></i>
+        <i class="cg-post cg-post--a" style="--x:50%;--y:-8.33%"></i>
+        <i class="cg-post cg-post--b" style="--x:50%;--y:108.33%"></i>
+    </div>
+
+    <!-- Linie kortu – wersja z Figmy (strefy układu; środkowa pozioma w app.js) -->
+    <div class="court-lines" aria-hidden="true">
+        <i class="court-line court-line--top"></i>
+        <i class="court-line court-line--mid"></i>
+        <i class="court-line court-line--bottom"></i>
+        <i class="court-line court-line--v court-line--left"></i>
+        <i class="court-line court-line--v court-line--net"></i>
+        <i class="court-line court-line--v court-line--right"></i>
+    </div>
+
+    <header class="nav">
+        <div class="nav__left">
+            <a class="logo" href="#" aria-label="Kortownia – strona główna">
+                <img src="img/logo-dot.svg" width="24" height="24" alt="">
+                <span class="logo__text">kortownia</span>
+            </a>
+        </div>
+        <div class="nav__right">
+            <div class="lang">
+                <button class="lang__trigger" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu-nav" aria-label="Język: polski" data-i18n-aria="langCurrent">
+                    <span class="lang__flag lang__flag--pl"><svg class="flag" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="10" fill="#fff"/><rect y="10" width="20" height="10" fill="#dc143c"/></svg></span>
+                    <span class="lang__flag lang__flag--en"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg></span>
+                    <span class="lang__code" data-i18n="langCode">PL</span>
+                    <svg class="lang__chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="lang__menu" id="lang-menu-nav" role="menu" aria-label="Język" data-i18n-aria="langLabel" hidden>
+                    <button class="lang__option" type="button" role="menuitemradio" data-lang="pl" aria-checked="true"><svg class="flag" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="10" fill="#fff"/><rect y="10" width="20" height="10" fill="#dc143c"/></svg><span lang="pl">Polski</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    <button class="lang__option" type="button" role="menuitemradio" data-lang="en" aria-checked="false"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg><span lang="en">English</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                </div>
+            </div>
+            <a class="btn btn--primary btn--sm" href="#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
+        </div>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Otwórz menu">
+            <span class="menu-button__bar"></span>
+            <span class="menu-button__bar"></span>
+        </button>
+    </header>
+
+    <main class="hero">
+        <div class="stage">
+            <h1 class="hero__title" data-i18n="title" data-i18n-breaks>Od pierwszej<span class="brk-d"></span>odbitej piłki<span class="brk-m"></span>do<span class="brk-d"></span>prawdziwej pasji</h1>
+
+            <img class="hero__plus" src="img/plus.svg" width="65.3553" height="68.6161" alt="" aria-hidden="true">
+
+            <div class="kv" aria-hidden="true">
+                <img class="kv__waves kv__waves--desktop" src="img/waves.svg" width="478.916" height="654.358" alt="">
+                <img class="kv__waves kv__waves--mobile" src="img/waves-mobile.svg" width="191.806" height="262.071" alt="">
+                <img class="kv__racket" src="img/racket.png" alt="">
+                <img class="kv__ball" src="img/ball.png" alt="">
+            </div>
+
+            <div class="surface-switch">
+                <span class="surface-switch__label" id="surface-label" data-i18n="surfaceLabel">Kort</span>
+                <div class="switch" role="group" aria-labelledby="surface-label">
+                    <button class="segment" type="button" data-surface="ceglany" aria-pressed="false" data-i18n="surfaceClay">Ceglany</button>
+                    <button class="segment" type="button" data-surface="twardy" aria-pressed="true" data-i18n="surfaceHard">Twardy</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero__copy">
+            <p class="hero__lead" data-i18n="lead">Treningi indywidualne i w małych grupach –
+od pierwszego odbicia po pierwszy mecz
+ze znajomymi.</p>
+            <div class="hero__cta">
+                <a class="btn btn--primary" href="#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
+                <a class="btn btn--link" href="#cennik" data-i18n="ctaPricing">Zobacz cennik</a>
+            </div>
+        </div>
+    </main>
+
+    <nav class="corner-nav" aria-label="Główna" data-i18n-aria="navLabel">
+        <a class="nav-link" href="#nasz-kort" data-i18n="navCourt">Nasz kort</a>
+        <a class="nav-link" href="#o-nas" data-i18n="navAbout">O nas</a>
+        <a class="nav-link" href="#cennik" data-i18n="navPricing">Cennik</a>
+        <a class="nav-link" href="#zapisy" data-i18n="navSignup">Zapisy</a>
+    </nav>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+        <nav class="mobile-menu__links" aria-label="Główna" data-i18n-aria="navLabel">
+            <a class="mobile-link" href="#nasz-kort" data-i18n="navCourt">Nasz kort</a>
+            <a class="mobile-link" href="#o-nas" data-i18n="navAbout">O nas</a>
+            <a class="mobile-link" href="#cennik" data-i18n="navPricing">Cennik</a>
+            <a class="mobile-link" href="#zapisy" data-i18n="navSignup">Zapisy</a>
+        </nav>
+        <div class="mobile-menu__cta">
+            <a class="btn btn--primary btn--block" href="#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
+            <div class="mobile-menu__row">
+                <div class="lang lang--up">
+                    <button class="lang__trigger" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu-mobile" aria-label="Język: polski" data-i18n-aria="langCurrent">
+                        <span class="lang__flag lang__flag--pl"><svg class="flag" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="10" fill="#fff"/><rect y="10" width="20" height="10" fill="#dc143c"/></svg></span>
+                        <span class="lang__flag lang__flag--en"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg></span>
+                        <span class="lang__code" data-i18n="langCode">PL</span>
+                        <svg class="lang__chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="lang__menu" id="lang-menu-mobile" role="menu" aria-label="Język" data-i18n-aria="langLabel" hidden>
+                        <button class="lang__option" type="button" role="menuitemradio" data-lang="pl" aria-checked="true"><svg class="flag" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="10" fill="#fff"/><rect y="10" width="20" height="10" fill="#dc143c"/></svg><span lang="pl">Polski</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                        <button class="lang__option" type="button" role="menuitemradio" data-lang="en" aria-checked="false"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg><span lang="en">English</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    </div>
+                </div>
+                <a class="btn btn--link" href="#cennik" data-i18n="ctaPricing">Zobacz cennik</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script type="module" src="preloader.js"></script>
+    <script type="module" src="kv3d.js"></script>
+
+</body>
+
+</html>

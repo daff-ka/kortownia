@@ -1,0 +1,1145 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ---------- Tokeny (Figma: Kortownia) ---------- */
+
+:root {
+    --pilka: #d5ff00;
+    --kreda: #ffffff;
+    --kreda-14: rgba(255, 255, 255, 0.14);
+    --kreda-30: rgba(255, 255, 255, 0.3);
+    --kreda-85: rgba(255, 255, 255, 0.85);
+    --siatka: #17230f;
+    --kort: #9fd748;
+
+    /* Nawierzchnia: Kort twardy (domyślnie) */
+    --nawierzchnia: #1164c5;
+
+    /* Margines boczny nawigacji i hero */
+    --gutter: clamp(16px, 3.84vw, 81px);
+    /* Rogi viewportu (logo, język + CTA, nawigacja, nawierzchnia):
+       x – od bocznej krawędzi, y – od górnej/dolnej krawędzi do środka
+       elementu (24 px + połowa 80-pikselowego paska nawigacji). */
+    --corner-x: calc(var(--gutter) + 24px);
+    --corner-y: 64px;
+
+    --font-logo: 'BBH Bartle', 'BBH Sans Bartle', sans-serif;
+    --font-display: 'Anybody', sans-serif;
+    --font-text: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
+}
+
+html[data-surface="ceglany"] {
+    --nawierzchnia: #e6411f;
+}
+
+html {
+    font-size: 16px;
+    font-family: var(--font-text);
+    color: var(--kreda);
+    background: var(--nawierzchnia);
+    transition: background-color 0.4s ease;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Bez przewijania w bok (canvas 3D wychodzi poza ramkę KV); clip nie tworzy
+   kontenera przewijania – działa też na iOS, gdzie samo hidden na body nie wystarcza. */
+html,
+body {
+    overflow-x: hidden;
+    overflow-x: clip;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding-top: 24px;
+    padding-bottom: 40px;
+}
+
+body.menu-open {
+    overflow: hidden;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+    cursor: pointer;
+}
+
+img {
+    display: block;
+}
+
+:focus-visible {
+    outline: 2px solid var(--kreda);
+    outline-offset: 2px;
+}
+
+/* ---------- Tło ---------- */
+
+.bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+    /* Kolor nawierzchni musi być wewnątrz tej warstwy (własny kontekst
+       nakładania) – inaczej ziarno w trybie overlay nie ma z czym się mieszać
+       i wypłukuje kolor. */
+    background: var(--nawierzchnia);
+    transition: background-color 0.4s ease;
+}
+
+/* Stałe piksele jak w Figmie (bez skalowania do szerokości okna) –
+   pasy nie zmieniają położenia przy zmianie rozmiaru. Kształty i tak
+   wychodzą daleko poza ramkę, więc tło jest pokryte przy każdej szerokości. */
+.bg__svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    overflow: visible;
+}
+
+.bg__svg--mobile {
+    display: none;
+}
+
+.bg__noise {
+    position: absolute;
+    inset: 0;
+    /* Neutralne szare ziarno (średnio 50% szarości) – w trybie overlay nie
+       zmienia koloru nawierzchni, tylko dodaje fakturę. */
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='.33 .33 .33 0 0 .33 .33 .33 0 0 .33 .33 .33 0 0 0 0 0 0 1'/%3E%3CfeComponentTransfer%3E%3CfeFuncR type='linear' slope='2.2' intercept='-.6'/%3E%3CfeFuncG type='linear' slope='2.2' intercept='-.6'/%3E%3CfeFuncB type='linear' slope='2.2' intercept='-.6'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url%28%23n%29'/%3E%3C/svg%3E");
+}
+
+/* ---------- Komponenty ---------- */
+
+/* Button – MD 52 px / SM 40 px */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 16px 24px;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+}
+
+.btn--sm {
+    font-size: 14px;
+    line-height: 18px;
+    padding: 11px 18px;
+}
+
+.btn--primary {
+    background: var(--kort);
+    color: var(--siatka);
+}
+
+.btn--primary:hover {
+    background: var(--kreda);
+}
+
+.btn--link {
+    padding: 16px 12px;
+    color: var(--kreda);
+    text-decoration: underline;
+    text-underline-position: from-font;
+}
+
+.btn--link:hover {
+    background: var(--kreda-14);
+}
+
+.btn--block {
+    width: 100%;
+}
+
+/* Nav link */
+.nav-link {
+    display: inline-flex;
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: nowrap;
+    transition: background-color 0.15s ease;
+}
+
+.nav-link:hover {
+    background: var(--kreda-14);
+}
+
+/* Przełącznik (tor) + Segment */
+.switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--kreda-14);
+}
+
+.segment,
+.surface-switch__label {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.segment {
+    padding: 6px 12px;
+    border-radius: 999px;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.segment:hover {
+    background: var(--kreda-14);
+}
+
+.segment[aria-pressed="true"] {
+    background: var(--kreda);
+    color: var(--siatka);
+    cursor: default;
+}
+
+/* Dropdown języka – szklany trigger (jak tor przełącznika), panel „kreda”. */
+.lang {
+    position: relative;
+}
+
+.lang__trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 12px 0 10px;
+    border-radius: 999px;
+    background: var(--kreda-14);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background-color 0.15s ease;
+}
+
+.lang__trigger:hover,
+.lang__trigger[aria-expanded="true"] {
+    background: var(--kreda-30);
+}
+
+.flag {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 1px rgba(23, 35, 15, 0.12);
+    flex: none;
+}
+
+.lang__flag {
+    display: none;
+}
+
+html[lang="pl"] .lang__flag--pl,
+html[lang="en"] .lang__flag--en {
+    display: block;
+}
+
+.lang__chevron {
+    width: 14px;
+    height: 14px;
+    opacity: 0.85;
+    transition: transform 0.2s ease;
+}
+
+.lang__trigger[aria-expanded="true"] .lang__chevron {
+    transform: rotate(180deg);
+}
+
+.lang__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    min-width: 176px;
+    padding: 6px;
+    border-radius: 18px;
+    background: var(--kreda);
+    color: var(--siatka);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    z-index: 20;
+    transform-origin: top right;
+    animation: lang-in 0.16s ease-out;
+}
+
+.lang__menu[hidden] {
+    display: none;
+}
+
+.lang--up .lang__menu {
+    top: auto;
+    bottom: calc(100% + 8px);
+    right: auto;
+    left: 0;
+    transform-origin: bottom left;
+}
+
+@keyframes lang-in {
+    from { opacity: 0; transform: scale(0.96); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.lang__option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    text-align: left;
+    color: var(--siatka);
+    transition: background-color 0.12s ease;
+}
+
+.lang__option:hover,
+.lang__option:focus-visible {
+    background: rgba(23, 35, 15, 0.07);
+    outline: none;
+}
+
+.lang__option[aria-checked="true"] {
+    font-weight: 700;
+}
+
+.lang__check {
+    width: 16px;
+    height: 16px;
+    margin-left: auto;
+    visibility: hidden;
+}
+
+.lang__option[aria-checked="true"] .lang__check {
+    visibility: visible;
+}
+
+/* ---------- Nawigacja ---------- */
+
+.nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(100% - 2 * var(--gutter));
+    margin: 0 auto;
+    padding: 20px 24px;
+    border-radius: 60px;
+    position: relative;
+    z-index: 10;
+}
+
+.nav__left {
+    display: flex;
+    align-items: center;
+}
+
+/* Dolny lewy róg – lustrzanie do logo. Tekst pierwszego linku
+   wyrównany do krawędzi logo (kompensacja paddingu pigułki 12 px). */
+.corner-nav {
+    position: fixed;
+    left: calc(var(--corner-x) - 12px);
+    bottom: var(--corner-y);
+    transform: translateY(50%);
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    z-index: 10;
+}
+
+.nav__right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.logo__text {
+    font-family: var(--font-logo);
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--kreda);
+}
+
+.menu-button {
+    display: none;
+}
+
+/* ---------- Hero (desktop) ----------
+   Układ odwzorowuje obszar 1947 × 838 z Figmy (szerokość jak nawigacja).
+   --u = 1 px projektu, skalowany do szerokości i wysokości okna. */
+
+/* Na dużych ekranach hero mieści się w kontenerze 2280 px (nawigacja
+   i elementy w rogach zostają przy krawędziach viewportu). */
+.hero {
+    --hero-max: 2280px;
+    --hero-w: min(100vw - 2 * var(--gutter), var(--hero-max));
+    --u: clamp(0.5px, min(var(--hero-w) / 1947, (100vh - 164px) / 838), 1px);
+    position: relative;
+    width: min(calc(100% - 2 * var(--gutter)), var(--hero-max));
+    height: calc(838 * var(--u));
+    margin: 60px auto 0;
+}
+
+.stage {
+    position: absolute;
+    inset: 0;
+}
+
+
+
+
+
+.hero__title {
+    position: absolute;
+    left: calc(68 * var(--u));
+    top: calc(155 * var(--u));
+    width: calc(1084 * var(--u));
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 150%;
+    font-variation-settings: "wdth" 150;
+    font-size: max(32px, 54 * var(--u));
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    color: var(--kreda);
+    z-index: 1;
+}
+
+/* Łamanie nagłówka: .brk-d = nowa linia na desktopie (spacja na mobile),
+   .brk-m = nowa linia na mobile (spacja na desktopie). */
+.brk-d::before {
+    content: "\A";
+    white-space: pre;
+}
+
+.brk-m::before {
+    content: " ";
+}
+
+.hero__plus {
+    position: absolute;
+    left: calc(59.865 * var(--u));
+    top: calc(417 * var(--u));
+    width: calc(65.3553 * var(--u));
+    height: calc(68.6161 * var(--u));
+    transform: scaleX(-1);
+}
+
+.kv {
+    position: absolute;
+    right: calc(221.5 * var(--u));
+    top: calc(39 * var(--u));
+    width: calc(499.53 * var(--u));
+    height: calc(799 * var(--u));
+    pointer-events: none;
+    /* Perspektywa dla fal (obrót 3D za kursorem w kv3d.js). */
+    perspective: 1100px;
+}
+
+.kv img {
+    position: absolute;
+}
+
+.kv__waves {
+    will-change: transform;
+}
+
+/* Kursor nad obszarem KV (kliknięcie podbija piłkę – kv3d.js). */
+body.kv-hover {
+    cursor: pointer;
+}
+
+.kv__waves--desktop {
+    left: calc(-6.705 * var(--u));
+    top: calc(58.555 * var(--u));
+    width: calc(478.916 * var(--u));
+    height: calc(654.358 * var(--u));
+}
+
+.kv__waves--mobile {
+    display: none;
+}
+
+/* Canvas 3D wychodzi poza ramkę KV (BLEED w kv3d.js = 25%). */
+.kv__canvas {
+    position: absolute;
+    inset: -25%;
+    width: 150%;
+    height: 150%;
+    animation: kv-in 0.6s ease both;
+}
+
+.kv--3d .kv__racket,
+.kv--3d .kv__ball {
+    display: none;
+}
+
+@keyframes kv-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.kv__racket {
+    left: calc(2.9 * var(--u));
+    top: 0;
+    width: calc(496.63 * var(--u));
+    height: calc(799 * var(--u));
+    object-position: bottom;
+}
+
+.kv__ball {
+    left: calc(158.62 * var(--u));
+    top: calc(139.56 * var(--u));
+    width: calc(97.331 * var(--u));
+    height: calc(111.651 * var(--u));
+    object-fit: cover;
+}
+
+/* Dolny prawy róg – lustrzanie do języka + CTA. */
+.surface-switch {
+    position: fixed;
+    right: var(--corner-x);
+    bottom: var(--corner-y);
+    transform: translateY(50%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 1;
+}
+
+.surface-switch__label {
+    color: var(--kreda-85);
+}
+
+.hero__copy {
+    position: absolute;
+    left: calc(122 * var(--u));
+    top: calc(486 * var(--u));
+    width: 589.157px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    z-index: 1;
+}
+
+.hero__lead {
+    width: 100%;
+    white-space: pre-line;
+    font-size: 18px;
+    line-height: 28px;
+}
+
+.hero__cta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ---------- Linie kortu ----------
+   1 px „kreda”, przypięte do otaczających elementów:
+   poziome (pełna szerokość) – górna pod paskiem nawigacji, dolna lustrzanie
+   nad dolnym rzędem rogów, środkowa w połowie odstępu między nagłówkiem
+   a opisem (--grid-mid liczone w app.js);
+   pionowe (pełna wysokość) – na krawędziach paska nawigacji (--line-x)
+   i pośrodku między nimi (siatka). */
+
+body {
+    position: relative;
+}
+
+.court-lines {
+    --line-x: var(--gutter);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.2;
+}
+
+.court-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--kreda);
+    transform-origin: left center;
+}
+
+.court-line--top {
+    top: calc(var(--corner-y) + 40px);
+}
+
+.court-line--mid {
+    top: var(--grid-mid, 50%);
+    transform-origin: right center;
+}
+
+.court-line--bottom {
+    bottom: calc(var(--corner-y) + 40px);
+}
+
+.court-line--v {
+    top: 0;
+    width: 1px;
+    height: 100%;
+    transform-origin: center top;
+}
+
+.court-line--left {
+    left: var(--line-x);
+}
+
+.court-line--right {
+    left: calc(100% - var(--line-x) - 1px);
+}
+
+.court-line--net {
+    left: 50%;
+}
+
+/* Po preloaderze linie „rysują się” po kolei. */
+html.is-loading .court-line {
+    scale: 0 1;
+}
+
+html.is-loading .court-line--v {
+    scale: 1 0;
+}
+
+html.is-loaded .court-line {
+    transition: scale 1.3s cubic-bezier(0.65, 0, 0.2, 1) var(--line-delay, 0s);
+}
+
+.court-line--top { --line-delay: 0.1s; }
+.court-line--left { --line-delay: 0.2s; }
+.court-line--mid { --line-delay: 0.3s; }
+.court-line--net { --line-delay: 0.4s; }
+.court-line--bottom { --line-delay: 0.5s; }
+.court-line--right { --line-delay: 0.6s; }
+
+/* Wariant gridu: „court” (domyślny) albo „figma” (linie z makiety). */
+html:not([data-grid="figma"]) .court-lines,
+html[data-grid="figma"] .court-grid {
+    display: none;
+}
+
+/* ---------- Kort (propozycja) ----------
+   Schemat kortu z góry, proporcje wg przepisów (ułamki ramki), rozpięty
+   na układzie: linie końcowe = krawędzie paska nawigacji, linie boczne =
+   pod górnym / nad dolnym rzędem rogów – elementy nawigacji stoją „na
+   wybiegu”, poza kortem. Każda linia: --x --y --w --h (poziomo);
+   na mobile kort jest obrócony (transpozycja tych samych zmiennych). */
+
+.court-grid {
+    position: absolute;
+    /* Boki kortu na linii elementów w rogach (logo, CTA, nawigacja, nawierzchnia). */
+    left: var(--corner-x);
+    right: var(--corner-x);
+    top: calc(var(--corner-y) + 40px);
+    bottom: calc(var(--corner-y) + 40px);
+    pointer-events: none;
+    /* Jednolite krycie wszystkich linii i słupków. */
+    opacity: 0.2;
+}
+
+.cg-line {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: var(--w);
+    height: var(--h);
+    background: var(--kreda);
+}
+
+.cg-line.is-h { transform-origin: left center; }
+.cg-line.is-v { transform-origin: center top; }
+
+.cg-post {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    width: 7px;
+    height: 7px;
+    margin: -3px 0 0 -3px;
+    border-radius: 50%;
+    background: var(--kreda);
+}
+
+/* Rysowanie po preloaderze – warstwami. */
+html.is-loading .cg-line.is-h { scale: 0 1; }
+html.is-loading .cg-line.is-v { scale: 1 0; }
+html.is-loading .cg-post { scale: 0; }
+
+html.is-loaded :is(.cg-line, .cg-post) {
+    transition: scale 1.2s cubic-bezier(0.65, 0, 0.2, 1) var(--line-delay, 0s);
+}
+
+.cg-line--outer { --line-delay: 0.1s; }
+.cg-line--net { --line-delay: 0.3s; }
+.cg-line--singles { --line-delay: 0.45s; }
+.cg-line--service { --line-delay: 0.6s; }
+.cg-line--center { --line-delay: 0.75s; }
+.cg-line--mark,
+.cg-post { --line-delay: 0.9s; }
+
+/* ---------- Preloader ---------- */
+
+.preloader {
+    display: none;
+}
+
+html.is-loading .preloader,
+.preloader.is-revealing,
+.preloader.is-fading {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    background: var(--kreda);
+    color: var(--siatka);
+}
+
+.preloader__stage {
+    position: relative;
+    width: 160px;
+    height: 160px;
+}
+
+/* Kropka z logo – odbija się; origin na dole, żeby spłaszczenie
+   przy uderzeniu „siadało” na podłodze. */
+.preloader__ball {
+    position: absolute;
+    left: 50%;
+    bottom: 26px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--pilka);
+    transform: translateX(-50%);
+    transform-origin: 50% 100%;
+    will-change: transform;
+    /* Odbijanie w CSS – liczone przez kompozytor, nie przycina się, gdy
+       główny wątek wczytuje modele 3D. Uderzenie wypada na 0%/100%, a
+       ujemne opóźnienie o pół okresu startuje ze szczytu (bez owalu na starcie). */
+    animation: preloader-bounce var(--bounce-period, 0.55s) infinite;
+    animation-delay: calc(var(--bounce-period, 0.55s) / -2);
+}
+
+@keyframes preloader-bounce {
+    0% {
+        transform: translate(-50%, 0) scale(1.14, 0.76);
+        animation-timing-function: linear;
+    }
+    7% {
+        transform: translate(-50%, -20.8px) scale(1, 1);
+        animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    50% {
+        transform: translate(-50%, -80px) scale(1, 1);
+        animation-timing-function: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    }
+    93% {
+        transform: translate(-50%, -20.8px) scale(1, 1);
+        animation-timing-function: linear;
+    }
+    100% {
+        transform: translate(-50%, 0) scale(1.14, 0.76);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .preloader__ball {
+        animation: none;
+    }
+}
+
+/* Licznik – styl Display H1 (jak nagłówek hero). */
+.preloader__count {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 150%;
+    font-variation-settings: "wdth" 150;
+    font-size: 27px;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    transition: opacity 0.25s ease;
+}
+
+.preloader.is-revealing .preloader__count {
+    opacity: 0 !important;
+}
+
+.preloader.is-fading {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+/* Wejście hero po odsłonięciu (indywidualne translate/scale nie kolidują
+   z transformami pozycjonującymi, np. przełącznika). */
+html.is-loading :is(.nav, .hero__title, .hero__plus, .hero__copy, .corner-nav, .surface-switch) {
+    opacity: 0;
+    translate: 0 18px;
+}
+
+html.is-loading .kv {
+    opacity: 0;
+    scale: 0.94;
+}
+
+html.is-loaded :is(.nav, .hero__title, .hero__plus, .hero__copy, .corner-nav, .surface-switch, .kv) {
+    transition:
+        opacity 0.8s ease var(--intro-delay, 0s),
+        translate 1s cubic-bezier(0.2, 0.8, 0.2, 1) var(--intro-delay, 0s),
+        scale 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) var(--intro-delay, 0s);
+}
+
+.kv { --intro-delay: 0.15s; }
+.nav { --intro-delay: 0.3s; }
+.hero__title { --intro-delay: 0.35s; }
+.hero__plus { --intro-delay: 0.5s; }
+.hero__copy { --intro-delay: 0.55s; }
+.corner-nav,
+.surface-switch { --intro-delay: 0.7s; }
+
+/* ---------- Menu mobilne ---------- */
+
+.mobile-menu {
+    position: fixed;
+    top: 88px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 32px;
+    padding: 24px 16px 32px;
+    overflow-y: auto;
+    z-index: 9;
+}
+
+.mobile-menu[hidden] {
+    display: none;
+}
+
+.mobile-menu__links {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--kreda-30);
+}
+
+.mobile-link {
+    padding: 18px 4px;
+    border-bottom: 1px solid var(--kreda-30);
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 150%;
+    font-variation-settings: "wdth" 150;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.mobile-menu__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.mobile-menu__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* ---------- Mobile (ramka 390 px, kort 358 × 520) ----------
+   --m = 1 px projektu mobilnego. */
+
+@media (max-width: 1023px) {
+    body {
+        --m: calc(min(100vw - 32px, 537px) / 358);
+        padding-top: 16px;
+    }
+
+    .bg__svg--desktop {
+        display: none;
+    }
+
+    .bg__svg--mobile {
+        display: block;
+    }
+
+    /* Mobile: kolumna 358 × --m (wyśrodkowana). Pasek nawigacji ma 16 px
+       wcięcia – logo stoi 16 px wewnątrz kolumny (jak w Figmie). */
+    .nav {
+        width: calc(358 * var(--m));
+        height: 56px;
+        padding: 0 6px 0 16px;
+        border-radius: 0;
+    }
+
+    /* Menu w tej samej kolumnie co pasek; linki wyrównane do logo,
+       linie podziału i przyciski na krawędzi kolumny. */
+    .mobile-menu {
+        padding-inline: calc((100% - 358 * var(--m)) / 2);
+    }
+
+    .mobile-link {
+        padding-inline: 16px;
+        font-size: 24px;
+    }
+
+    .nav__right,
+    .corner-nav {
+        display: none;
+    }
+
+    .menu-button {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 44px;
+        height: 44px;
+        border-radius: 999px;
+        background: var(--kreda-14);
+    }
+
+    .menu-button__bar {
+        width: 18px;
+        height: 2px;
+        border-radius: 1px;
+        background: var(--kreda);
+        transition: transform 0.2s ease;
+    }
+
+    .menu-button[aria-expanded="true"] .menu-button__bar:first-child {
+        transform: translateY(4px) rotate(45deg);
+    }
+
+    .menu-button[aria-expanded="true"] .menu-button__bar:last-child {
+        transform: translateY(-4px) rotate(-45deg);
+    }
+
+    body.menu-open :is(.hero, .court-grid, .court-lines) {
+        visibility: hidden;
+    }
+
+    .hero {
+        width: calc(358 * var(--m));
+        height: auto;
+        margin-top: 16px;
+    }
+
+    .stage {
+        position: relative;
+        height: calc(520 * var(--m));
+    }
+
+
+    .hero__title {
+        white-space: normal;
+        left: calc(27 * var(--m));
+        top: calc(22 * var(--m));
+        width: calc(307 * var(--m));
+        font-size: 24px;
+        line-height: 1.2;
+    }
+
+    .hero__plus {
+        display: none;
+    }
+
+    /* Mobile: linia pod paskiem nawigacji i między wizualem a tekstem. */
+    .court-line--top {
+        top: 80px;
+    }
+
+    .court-line--bottom {
+        display: none;
+    }
+
+    /* Kort pionowo: kolumna (logo / hamburger) od paska nawigacji
+       do końca strony; transpozycja --x/--y i --w/--h. */
+    /* Kort obejmuje nagłówek, KV i przełącznik (scena 520 × --m od 88 px);
+       opis i przyciski stoją pod nim. Boki na linii logo, symetrycznie. */
+    .court-grid {
+        left: calc((100% - 358 * var(--m)) / 2 + 16px);
+        right: calc((100% - 358 * var(--m)) / 2 + 16px);
+        top: 80px;
+        bottom: auto;
+        height: calc(520 * var(--m) + 16px);
+    }
+
+    .cg-line,
+    .cg-post {
+        left: var(--y);
+        top: var(--x);
+    }
+
+    .cg-line {
+        width: var(--h);
+        height: var(--w);
+    }
+
+    .cg-line.is-h { transform-origin: center top; }
+    .cg-line.is-v { transform-origin: left center; }
+    html.is-loading .cg-line.is-h { scale: 1 0; }
+    html.is-loading .cg-line.is-v { scale: 0 1; }
+
+    /* Siatka i słupki wysunięte tylko w margines kolumny (bez przewijania). */
+    .cg-line--net {
+        left: -10px;
+        width: calc(100% + 20px);
+    }
+
+    .cg-post--a { left: -10px; }
+    .cg-post--b { left: calc(100% + 10px); }
+
+    /* Pionowe linie na krawędziach kolumny (logo / hamburger). */
+    .court-lines {
+        --line-x: calc((100% - 358 * var(--m)) / 2);
+    }
+
+    .brk-d::before {
+        content: " ";
+        white-space: normal;
+    }
+
+    .brk-m::before {
+        content: "\A";
+        white-space: pre;
+    }
+
+    .kv {
+        right: auto;
+        left: calc(80 * var(--m));
+        top: calc(144 * var(--m));
+        width: calc(200.062 * var(--m));
+        height: calc(320 * var(--m));
+    }
+
+    .kv__waves--desktop {
+        display: none;
+    }
+
+    .kv__waves--mobile {
+        display: block;
+        left: calc(-2.685 * var(--m));
+        top: calc(23.453 * var(--m));
+        width: calc(191.806 * var(--m));
+        height: calc(262.071 * var(--m));
+    }
+
+    .kv__racket {
+        left: calc(1.161 * var(--m));
+        width: calc(198.901 * var(--m));
+        height: calc(320 * var(--m));
+    }
+
+    .kv__ball {
+        left: calc(63.526 * var(--m));
+        top: calc(55.895 * var(--m));
+        width: calc(38.981 * var(--m));
+        height: calc(44.716 * var(--m));
+    }
+
+    .surface-switch {
+        position: absolute;
+        right: auto;
+        bottom: auto;
+        left: 50%;
+        top: calc(491 * var(--m));
+        transform: translate(-50%, -50%);
+    }
+
+
+    /* Opis i przyciski na linii logo (16 px wewnątrz kolumny). */
+    .hero__copy {
+        padding-inline: 16px;
+        position: static;
+        width: auto;
+        margin-top: 28px;
+        gap: 20px;
+    }
+
+    .hero__lead {
+        width: 100%;
+        white-space: normal;
+    }
+
+    .hero__cta {
+        flex-direction: column;
+    }
+
+    .hero__cta .btn--primary {
+        width: 100%;
+    }
+}
+
+@media (min-width: 1024px) {
+    .mobile-menu {
+        display: none !important;
+    }
+
+    /* Desktop: dokładnie jeden ekran, bez przewijania. */
+    html,
+    body {
+        height: 100%;
+        overflow: hidden;
+    }
+
+    body {
+        padding-bottom: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition: none !important;
+    }
+}
