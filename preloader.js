@@ -40,7 +40,8 @@ function run() {
         const elapsed = (performance.now() - start) / 1000;
         const kvDone = kvState.ready || elapsed >= KV_WAIT;
         const fontsDone = fontsReady || elapsed >= KV_WAIT + 1; // font-display: swap dociągnie resztę
-        return (kvDone && fontsDone && (shown > 99.5 || !kvState.ready)) || elapsed >= MAX_TIME;
+        // Bez czekania na dojście (ukrytego) licznika do 100 – o jedno odbicie krócej.
+        return (kvDone && fontsDone) || elapsed >= MAX_TIME;
     }
 
     // Każde okrążenie animacji kończy się uderzeniem w podłogę; szczyt
@@ -54,6 +55,7 @@ function run() {
 
     function startReveal() {
         revealing = true;
+        countEl.textContent = '100';
         revealStart = performance.now();
         // Zatrzymanie w szczycie: aktualne przesunięcie z animacji zamieniamy
         // na stały transform i dalej skalujemy wokół środka kropki.

@@ -40,7 +40,7 @@ html {
     font-family: var(--font-text);
     color: var(--kreda);
     background: var(--nawierzchnia);
-    transition: background-color 0.4s ease;
+    transition: background-color 0.5s cubic-bezier(0.65, 0, 0.35, 1);
     -webkit-font-smoothing: antialiased;
 }
 
@@ -98,7 +98,7 @@ img {
        nakładania) – inaczej ziarno w trybie overlay nie ma z czym się mieszać
        i wypłukuje kolor. */
     background: var(--nawierzchnia);
-    transition: background-color 0.4s ease;
+    transition: background-color 0.5s cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 /* Stałe piksele jak w Figmie (bez skalowania do szerokości okna) –
@@ -220,6 +220,50 @@ img {
     background: var(--kreda);
     color: var(--siatka);
     cursor: default;
+}
+
+/* Przełącznik nawierzchni: przesuwana pigułka pod aktywnym segmentem. */
+.switch--sliding {
+    position: relative;
+    isolation: isolate;
+}
+
+.switch__thumb {
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    left: 0;
+    width: var(--thumb-w, 0);
+    translate: var(--thumb-x, 0) 0;
+    border-radius: 999px;
+    background: var(--kreda);
+    z-index: -1;
+}
+
+.switch--sliding.is-ready .switch__thumb {
+    transition:
+        translate 0.5s cubic-bezier(0.65, 0, 0.35, 1),
+        width 0.5s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.switch--sliding .segment,
+.switch--sliding .segment[aria-pressed="true"] {
+    background: transparent;
+    transition: color 0.35s ease 0.08s;
+}
+
+.switch--sliding .segment:not([aria-pressed="true"]):hover {
+    background: var(--kreda-14);
+}
+
+.surface-switch__label {
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.surface-switch__label:hover {
+    color: var(--kreda);
 }
 
 /* Dropdown języka – szklany trigger (jak tor przełącznika), panel „kreda”. */
@@ -411,7 +455,10 @@ html[lang="en"] .lang__flag--en {
 .hero {
     --hero-max: 2280px;
     --hero-w: min(100vw - 2 * var(--gutter), var(--hero-max));
-    --u: clamp(0.5px, min(var(--hero-w) / 1947, (100vh - 164px) / 838), 1px);
+    /* Skala: szerokość, wysokość hero i – na niższych ekranach – miejsce na
+       opis z przyciskami (stały rozmiar ~160 px, start na 486u): dół przycisków
+       min. 24 px nad dolną linią kortu (100vh − 104px). 164 = góra hero. */
+    --u: clamp(0.35px, min(var(--hero-w) / 1947, (100vh - 164px) / 838, (100vh - 104px - 24px - 164px - 160px) / 486), 1px);
     position: relative;
     width: min(calc(100% - 2 * var(--gutter)), var(--hero-max));
     height: calc(838 * var(--u));
@@ -476,6 +523,16 @@ html[lang="en"] .lang__flag--en {
 
 .kv img {
     position: absolute;
+}
+
+/* KV nie jest zaznaczalne ani przeciągane (bez niebieskiego podświetlenia
+   przy szybkim klikaniu / podbijaniu piłki). */
+.kv,
+.kv * {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .kv__waves {
@@ -701,6 +758,16 @@ html[data-grid="figma"] .court-grid {
     border-radius: 50%;
     background: var(--kreda);
 }
+
+/* Siatka wysunięta poza linie boczne do słupków (8,33% wysokości kortu),
+   ale najwyżej 40 px – na wysokich ekranach słupek nie wchodzi na podpis. */
+.cg-line--net {
+    top: max(-8.33%, -40px);
+    height: calc(100% + 2 * min(8.33%, 40px));
+}
+
+.cg-post--a { top: max(-8.33%, -40px); }
+.cg-post--b { top: calc(100% + min(8.33%, 40px)); }
 
 /* Rysowanie po preloaderze – warstwami. */
 html.is-loading .cg-line.is-h { scale: 0 1; }

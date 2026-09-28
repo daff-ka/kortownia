@@ -294,6 +294,7 @@ function init() {
     window.addEventListener('pointerdown', (e) => {
         if (!running || isUi(e)) return;
         if (!inKv(e) && !nearBall(e)) return;
+        e.preventDefault(); // bez zaznaczania tekstu przy szybkim klikaniu
         // Piłka w locie: podbicie kursorem od razu (żonglerka).
         if (ballB - planeB > HIT.air) {
             const { min, add, max } = HIT.juggle;

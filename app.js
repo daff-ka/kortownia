@@ -4,11 +4,23 @@ const root = document.documentElement;
 
 const surfaceButtons = document.querySelectorAll('[data-surface]:not(html)');
 
+// Przesuwana pigułka pod aktywnym segmentem (pozycja i szerokość z układu).
+const surfaceSwitch = document.querySelector('.switch--sliding');
+
+function updateThumb() {
+    if (!surfaceSwitch) return;
+    const active = surfaceSwitch.querySelector('.segment[aria-pressed="true"]');
+    if (!active) return;
+    surfaceSwitch.style.setProperty('--thumb-x', `${active.offsetLeft}px`);
+    surfaceSwitch.style.setProperty('--thumb-w', `${active.offsetWidth}px`);
+}
+
 function setSurface(surface) {
     root.dataset.surface = surface;
     surfaceButtons.forEach((btn) => {
         btn.setAttribute('aria-pressed', String(btn.dataset.surface === surface));
     });
+    updateThumb();
     try {
         localStorage.setItem('kortownia-surface', surface);
     } catch (e) {}
@@ -18,7 +30,19 @@ surfaceButtons.forEach((btn) => {
     btn.addEventListener('click', () => setSurface(btn.dataset.surface));
 });
 
+// Klik w etykietę „Kort” przełącza na drugą nawierzchnię.
+const surfaceLabel = document.querySelector('.surface-switch__label');
+if (surfaceLabel) {
+    surfaceLabel.addEventListener('click', () => {
+        setSurface(root.dataset.surface === 'ceglany' ? 'twardy' : 'ceglany');
+    });
+}
+
 setSurface(root.dataset.surface);
+// Animacja pigułki dopiero po pierwszym ustawieniu (bez przesuwania przy starcie).
+requestAnimationFrame(() => surfaceSwitch && surfaceSwitch.classList.add('is-ready'));
+window.addEventListener('resize', updateThumb);
+if (document.fonts) document.fonts.ready.then(updateThumb);
 
 /* ---------- Język: PL / ENG ---------- */
 
@@ -98,6 +122,7 @@ function setLang(next) {
     });
     updateMenuLabel();
     schedulePlaceMidLine();
+    updateThumb();
     try {
         localStorage.setItem('kortownia-lang', lang);
     } catch (e) {}
