@@ -922,6 +922,89 @@ html.is-loaded :is(.nav, .hero__title, .hero__plus, .hero__copy, .corner-nav, .s
 .corner-nav,
 .surface-switch { --intro-delay: 0.7s; }
 
+/* ---------- Podpowiedź przy piłce ----------
+   Wzór: tooltip z GitHub Primer – ciemna, zwarta etykieta z ostrym
+   trójkącikiem, bez cienia, zanikanie + 4 px przesunięcia. Typografia:
+   styl Kortownia/Label. Pozycję (--hint-x/--hint-y, px viewportu) i stronę
+   (.is-left / .is-below) ustawia kv3d.js w każdej klatce. */
+
+.kv-hint {
+    --caret: 6px;
+    --nudge-x: -4px;
+    --nudge-y: 0px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    /* Pozycja przy piłce – bez animacji (inaczej Safari animuje przelot
+       z pozycji startowej poza ekranem). Wjazd o 4 px – osobno, w transform. */
+    translate: var(--hint-x, -999px) var(--hint-y, -999px);
+    transform: translate(var(--nudge-x), var(--nudge-y));
+    z-index: 11;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: var(--siatka);
+    color: var(--kreda);
+    font-family: var(--font-text);
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Trójkącik w stronę piłki (domyślnie: tooltip z prawej, trójkąt z lewej) */
+.kv-hint::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    margin-top: calc(-1 * var(--caret));
+    border: var(--caret) solid transparent;
+    border-right-color: var(--siatka);
+}
+
+.kv-hint.is-left { --nudge-x: 4px; }
+
+.kv-hint.is-left::before {
+    right: auto;
+    left: 100%;
+    border-right-color: transparent;
+    border-left-color: var(--siatka);
+}
+
+.kv-hint.is-below { --nudge-x: 0px; --nudge-y: -4px; }
+
+.kv-hint.is-below::before {
+    top: auto;
+    bottom: 100%;
+    right: auto;
+    left: var(--arrow-x, 50%);
+    margin: 0 0 0 calc(-1 * var(--caret));
+    border-right-color: transparent;
+    border-bottom-color: var(--siatka);
+}
+
+.kv-hint.is-visible {
+    --nudge-x: 0px;
+    --nudge-y: 0px;
+    opacity: 1;
+}
+
+.kv-hint__text--tap { display: none; }
+
+@media (hover: none), (pointer: coarse) {
+    .kv-hint__text--click { display: none; }
+    .kv-hint__text--tap { display: inline; }
+}
+
+body.menu-open .kv-hint {
+    visibility: hidden;
+}
+
 /* ---------- Podpis autorów modeli 3D (CC BY 4.0) ----------
    Maksymalnie dyskretnie: desktop – środek samego dołu ekranu,
    mobile – koniec strony. */

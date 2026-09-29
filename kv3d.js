@@ -94,6 +94,8 @@ const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches
 const X_AXIS = new THREE.Vector3(1, 0, 0);
 const Z_AXIS = new THREE.Vector3(0, 0, 1);
 
+const root = document.documentElement;
+
 function toWorld([x, y]) {
     return new THREE.Vector3(x - DESIGN.w / 2, DESIGN.h / 2 - y, 0);
 }
@@ -291,10 +293,72 @@ function init() {
         return Math.hypot(e.clientX - b.x, e.clientY - b.y) < b.radius * 2.2 + 24;
     }
 
+    // ---------- Podpowiedź przy piłce ----------
+    // Pokazuje się ~1,5 s po wejściu strony, jedzie za piłką, znika po
+    // pierwszym odbiciu i już nie wraca (localStorage).
+    const hint = document.querySelector('.kv-hint');
+    const HINT_KEY = 'kortownia-kv-hint';
+    let hintDone = false;
+    try {
+        // ?hint w adresie – pokaż podpowiedź od nowa (do testów).
+        if (new URLSearchParams(location.search).has('hint')) localStorage.removeItem(HINT_KEY);
+        hintDone = localStorage.getItem(HINT_KEY) === 'done';
+    } catch (e) {}
+    let hintVisible = false;
+
+    function showHint() {
+        if (!hint || hintDone || reduceMotion) return;
+        hintVisible = true;
+        placeHint();
+        requestAnimationFrame(() => hint.classList.add('is-visible'));
+    }
+
+    function dismissHint() {
+        if (hintDone) return;
+        hintDone = true;
+        try { localStorage.setItem(HINT_KEY, 'done'); } catch (e) {}
+        if (hint) hint.classList.remove('is-visible');
+        setTimeout(() => { hintVisible = false; }, 400);
+    }
+
+    function placeHint() {
+        if (!hint || !hintVisible) return;
+        const b = ballOnScreen();
+        const gap = b.radius + 14;
+        const w = hint.offsetWidth;
+        const h = hint.offsetHeight;
+        const vw = window.innerWidth;
+        // Z prawej, z lewej, a gdy boki się nie mieszczą – pod piłką.
+        let side = 'right';
+        if (b.x + gap + w > vw - 16) side = b.x - gap - w >= 16 ? 'left' : 'below';
+        let x;
+        let y;
+        if (side === 'right') { x = b.x + gap; y = b.y - h / 2; }
+        else if (side === 'left') { x = b.x - gap - w; y = b.y - h / 2; }
+        else {
+            x = Math.min(vw - 16 - w, Math.max(16, b.x - w / 2));
+            y = b.y + gap;
+            hint.style.setProperty('--arrow-x', `${Math.round(b.x - x)}px`);
+        }
+        hint.classList.toggle('is-left', side === 'left');
+        hint.classList.toggle('is-below', side === 'below');
+        hint.style.setProperty('--hint-x', `${Math.round(x)}px`);
+        hint.style.setProperty('--hint-y', `${Math.round(y)}px`);
+    }
+
+    function scheduleHint() {
+        const start = () => setTimeout(showHint, 1500);
+        if (root.classList.contains('is-loaded')) start();
+        else new MutationObserver((_, obs) => {
+            if (root.classList.contains('is-loaded')) { obs.disconnect(); start(); }
+        }).observe(root, { attributes: true, attributeFilter: ['class'] });
+    }
+
     window.addEventListener('pointerdown', (e) => {
         if (!running || isUi(e)) return;
         if (!inKv(e) && !nearBall(e)) return;
         e.preventDefault(); // bez zaznaczania tekstu przy szybkim klikaniu
+        dismissHint();
         // Piłka w locie: podbicie kursorem od razu (żonglerka).
         if (ballB - planeB > HIT.air) {
             const { min, add, max } = HIT.juggle;
@@ -414,6 +478,7 @@ function init() {
         }
         ball.orient.rotateOnWorldAxis(Z_AXIS, BALL_PHYS.idleSpin * dt);
 
+        placeHint();
         render();
     }
 
@@ -462,6 +527,7 @@ function init() {
         updateRunning();
         // Pierwsza klatka gotowa → preloader może odsłonić stronę.
         requestAnimationFrame(signalReady);
+        scheduleHint();
     }).catch((err) => {
         console.warn('[kv3d] Nie udało się wczytać modeli – zostają grafiki 2D.', err);
         signalReady();

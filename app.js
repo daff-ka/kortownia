@@ -67,6 +67,8 @@ const translations = {
         menuOpen: 'Otwórz menu',
         menuClose: 'Zamknij menu',
         credits: 'Modele 3D · CC BY',
+        kvHintClick: 'Kliknij, żeby odbić piłkę',
+        kvHintTap: 'Stuknij, żeby odbić piłkę',
     },
     en: {
         navLabel: 'Main',
@@ -87,6 +89,8 @@ const translations = {
         menuOpen: 'Open menu',
         menuClose: 'Close menu',
         credits: '3D models · CC BY',
+        kvHintClick: 'Click to bounce the ball',
+        kvHintTap: 'Tap to bounce the ball',
     },
 };
 
