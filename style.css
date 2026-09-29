@@ -31,8 +31,20 @@
     --font-text: 'Atkinson Hyperlegible Next', system-ui, sans-serif;
 }
 
+/* Ceglany przyciemniony z #e6411f do #dc3a19 – biały tekst ≥ 4,5:1 (WCAG AA). */
 html[data-surface="ceglany"] {
-    --nawierzchnia: #e6411f;
+    --nawierzchnia: #dc3a19;
+}
+
+/* Na ceglanym tory przełączników i przycisk języka są ciemne (czerń 14%)
+   zamiast jasnych – biały tekst nieaktywnych segmentów ≥ 5:1. */
+html[data-surface="ceglany"] :is(.switch, .lang__trigger) {
+    background: rgba(0, 0, 0, 0.14);
+}
+
+html[data-surface="ceglany"] .lang__trigger:hover,
+html[data-surface="ceglany"] .lang__trigger[aria-expanded="true"] {
+    background: rgba(0, 0, 0, 0.24);
 }
 
 html {
@@ -603,7 +615,7 @@ body.kv-hover {
 }
 
 .surface-switch__label {
-    color: var(--kreda-85);
+    color: var(--kreda);
 }
 
 .hero__copy {
