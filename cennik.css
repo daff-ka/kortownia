@@ -1,0 +1,484 @@
+/* ---------- Cennik ----------
+   Tabela jak kort widziany z góry: zewnętrzna ramka = linie boczne,
+   pionowa „siatka” ze słupkami dzieli sezony (lato | zima). */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.pricing {
+    /* Szerokość kolumn: nazwa zajęć | lato | zima. Siatka stoi na granicy
+       lato/zima, więc jej położenie wynika z tych samych wartości. */
+    --col-offer: 46%;
+    --col-season: 27%;
+    width: min(100% - 2 * var(--corner-x), 1180px);
+    margin: 0 auto;
+    padding-top: clamp(48px, 7vw, 96px);
+}
+
+/* ---------- Nagłówek ---------- */
+
+.pricing__head {
+    max-width: 720px;
+    margin-bottom: clamp(56px, 7vw, 96px);
+}
+
+.pricing__eyebrow,
+.season-switch__label,
+.price-group__unit {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.pricing__eyebrow {
+    color: var(--pilka);
+    margin-bottom: 16px;
+}
+
+.pricing__title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 150%;
+    font-variation-settings: "wdth" 150;
+    font-size: clamp(40px, 6.4vw, 88px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+}
+
+.pricing__lead {
+    margin-top: 24px;
+    max-width: 34em;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--kreda-85);
+}
+
+/* Przełącznik sezonu – tylko mobile. */
+.season-switch {
+    display: none;
+}
+
+/* ---------- Kort-tabela ---------- */
+
+.price-court {
+    position: relative;
+    border: 1px solid var(--kreda-30);
+}
+
+.price-court__net {
+    position: absolute;
+    left: calc(var(--col-offer) + var(--col-season));
+    top: -40px;
+    bottom: -40px;
+    width: 1px;
+    background: var(--kreda);
+    transform-origin: center top;
+    pointer-events: none;
+}
+
+.price-court__net::before,
+.price-court__net::after {
+    content: "";
+    position: absolute;
+    left: -3px;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--kreda);
+}
+
+.price-court__net::before { top: -3px; }
+.price-court__net::after { bottom: -3px; }
+
+.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-variant-numeric: tabular-nums;
+}
+
+.price-table__col-offer { width: var(--col-offer); }
+.price-table__col-season { width: var(--col-season); }
+
+.price-table th,
+.price-table td {
+    padding: 18px 32px;
+    text-align: left;
+    font-weight: 400;
+    vertical-align: middle;
+}
+
+/* Sezony */
+.price-table thead th {
+    padding-top: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--kreda-30);
+    vertical-align: bottom;
+}
+
+.price-table thead .is-lato,
+.price-table thead .is-zima,
+.price-table .price {
+    text-align: right;
+}
+
+.price-table__corner {
+    font-size: 14px;
+    color: var(--kreda-85);
+}
+
+.season__name,
+.price-group__name,
+.price__amount {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 150%;
+    font-variation-settings: "wdth" 150;
+    letter-spacing: -0.01em;
+}
+
+.season__name {
+    display: block;
+    font-size: 24px;
+    line-height: 1.2;
+}
+
+.season__period {
+    display: block;
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--kreda-85);
+}
+
+/* Grupy */
+.price-group__head th {
+    padding-top: 44px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--kreda-30);
+}
+
+.price-group:first-of-type .price-group__head th {
+    padding-top: 32px;
+}
+
+.price-group__name {
+    font-size: 20px;
+    line-height: 1.2;
+    margin-right: 16px;
+}
+
+.price-group__unit {
+    color: var(--kreda-85);
+    white-space: nowrap;
+}
+
+/* Wiersze */
+.price-row > * {
+    border-bottom: 1px solid var(--kreda-14);
+    transition: background-color 0.15s ease;
+}
+
+.price-group:last-of-type .price-row:last-child > * {
+    border-bottom: 0;
+}
+
+.price-row:hover > * {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.offer__name {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 12px;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.4;
+}
+
+.offer__detail {
+    display: block;
+    margin-top: 2px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--kreda-85);
+}
+
+.offer__badge {
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: var(--pilka);
+    color: var(--siatka);
+    font-weight: 500;
+    font-size: 11px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.price {
+    white-space: nowrap;
+}
+
+.price__amount {
+    font-size: 26px;
+    line-height: 1.2;
+}
+
+.price__currency {
+    margin-left: 6px;
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.price__none {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--kreda-85);
+}
+
+.pricing__error {
+    padding: 32px;
+    border: 1px solid var(--kreda-30);
+    font-size: 18px;
+    line-height: 28px;
+}
+
+/* Wejście: siatka „rozwija się” z góry, wiersze pojawiają się po niej. */
+.price-court:not(.is-ready) .price-court__net {
+    scale: 1 0;
+}
+
+.price-court:not(.is-ready) tbody {
+    opacity: 0;
+}
+
+.price-court.is-ready .price-court__net {
+    transition: scale 0.9s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.price-court.is-ready tbody {
+    transition: opacity 0.5s ease 0.3s;
+}
+
+/* ---------- Dobrze wiedzieć + CTA ---------- */
+
+.pricing__notes {
+    margin-top: clamp(72px, 8vw, 112px);
+    display: grid;
+    grid-template-columns: var(--col-offer) 1fr;
+    column-gap: 32px;
+}
+
+.pricing__notes-title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 150%;
+    font-variation-settings: "wdth" 150;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.pricing__notes-list {
+    list-style: none;
+    display: grid;
+    gap: 16px;
+}
+
+.pricing__notes-list li {
+    position: relative;
+    padding-left: 22px;
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--kreda-85);
+}
+
+/* Znacznik: piłka */
+.pricing__notes-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--pilka);
+}
+
+.pricing__cta {
+    margin-top: 56px;
+    margin-left: calc(var(--col-offer) + 32px);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+}
+
+.pricing__updated {
+    font-size: 14px;
+    color: var(--kreda-85);
+}
+
+/* ---------- Stopka podstrony ---------- */
+
+.subpage-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: clamp(80px, 9vw, 128px);
+    padding: 0 var(--corner-x);
+}
+
+.nav-link[aria-current="page"],
+.mobile-link[aria-current="page"] {
+    color: var(--pilka);
+}
+
+.subpage :is(.surface-switch, .credits) {
+    position: static;
+    transform: none;
+}
+
+/* Strona główna na desktopie mieści się w jednym ekranie (bez przewijania) –
+   podstrona jest dłuższa, więc przywracamy przewijanie w pionie. */
+@media (min-width: 1024px) {
+    html:has(body.subpage),
+    body.subpage {
+        height: auto;
+        overflow-y: visible;
+    }
+
+    body.subpage {
+        padding-bottom: 40px;
+    }
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 1023px) {
+    .pricing {
+        --col-offer: 62%;
+        --col-season: 38%;
+        width: calc(358 * var(--m));
+        padding-top: 40px;
+    }
+
+    .pricing__head {
+        margin-bottom: 32px;
+    }
+
+    .pricing__lead {
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    .season-switch {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+
+    .price-court[data-season="lato"] .is-zima,
+    .price-court[data-season="zima"] .is-lato {
+        display: none;
+    }
+
+    .price-court__net {
+        display: none;
+    }
+
+    /* Jedna kolumna cen – szerokości z treści, cena przy prawej krawędzi. */
+    .price-table {
+        table-layout: auto;
+    }
+
+    .price-table col {
+        width: auto;
+    }
+
+    .price-table .price,
+    .price-table thead .is-lato,
+    .price-table thead .is-zima {
+        width: 1%;
+    }
+
+    .price-table th,
+    .price-table td {
+        padding: 14px 16px;
+    }
+
+    .price-group__head th {
+        padding-top: 32px;
+    }
+
+    .price-group__name {
+        display: block;
+        margin: 0 0 4px;
+        font-size: 18px;
+    }
+
+    .price-group__unit {
+        white-space: normal;
+    }
+
+    .price__amount {
+        font-size: 22px;
+    }
+
+    .season__name {
+        font-size: 20px;
+    }
+
+    .pricing__notes {
+        grid-template-columns: 1fr;
+        row-gap: 24px;
+        margin-top: 64px;
+    }
+
+    .pricing__notes-title {
+        font-size: 24px;
+    }
+
+    .pricing__cta {
+        margin: 40px 0 0;
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .subpage-foot {
+        flex-direction: column;
+        width: calc(358 * var(--m));
+        margin-inline: auto;
+        padding: 0;
+    }
+
+    body.menu-open :is(.pricing, .subpage-foot) {
+        visibility: hidden;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .price-court .price-court__net,
+    .price-court tbody {
+        transition: none !important;
+        scale: none !important;
+        opacity: 1 !important;
+    }
+}

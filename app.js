@@ -96,6 +96,11 @@ const translations = {
     },
 };
 
+// Podstrony dokładają własne teksty (window.pageI18n, ładowane przed app.js).
+if (window.pageI18n) {
+    Object.keys(translations).forEach((l) => Object.assign(translations[l], window.pageI18n[l]));
+}
+
 const langButtons = document.querySelectorAll('[data-lang]');
 let lang = 'pl';
 
@@ -130,6 +135,7 @@ function setLang(next) {
     updateMenuLabel();
     schedulePlaceMidLine();
     updateThumb();
+    document.dispatchEvent(new CustomEvent('kortownia:lang', { detail: lang }));
     try {
         localStorage.setItem('kortownia-lang', lang);
     } catch (e) {}
@@ -280,7 +286,8 @@ function schedulePlaceMidLine() {
 
 window.addEventListener('resize', schedulePlaceMidLine);
 if (document.fonts) document.fonts.ready.then(schedulePlaceMidLine);
-new ResizeObserver(schedulePlaceMidLine).observe(document.querySelector('.hero'));
+const hero = document.querySelector('.hero');
+if (hero) new ResizeObserver(schedulePlaceMidLine).observe(hero);
 
 let savedLang = null;
 try {

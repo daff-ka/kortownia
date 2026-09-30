@@ -1,0 +1,362 @@
+{
+  "updated": "2026-09-30",
+  "seasons": {
+    "lato": {
+      "name": {
+        "pl": "Lato",
+        "en": "Summer"
+      },
+      "period": {
+        "pl": "maj–wrzesień · korty odkryte",
+        "en": "May–September · outdoor courts"
+      }
+    },
+    "zima": {
+      "name": {
+        "pl": "Zima",
+        "en": "Winter"
+      },
+      "period": {
+        "pl": "październik–kwiecień · hala",
+        "en": "October–April · indoor hall"
+      }
+    }
+  },
+  "groups": [
+    {
+      "id": "start",
+      "name": {
+        "pl": "Na start",
+        "en": "Getting started"
+      },
+      "unit": {
+        "pl": "jednorazowo",
+        "en": "one-off"
+      },
+      "items": [
+        {
+          "id": "proba-indywidualna",
+          "name": {
+            "pl": "Lekcja próbna 1 na 1",
+            "en": "Trial one-to-one lesson"
+          },
+          "detail": {
+            "pl": "60 min, dni robocze do 16:00",
+            "en": "60 min, weekdays before 4 pm"
+          },
+          "badge": {
+            "pl": "Pierwsza lekcja",
+            "en": "First lesson"
+          },
+          "prices": {
+            "lato": 119,
+            "zima": 149
+          }
+        },
+        {
+          "id": "proba-grupa",
+          "name": {
+            "pl": "Trening próbny w grupie",
+            "en": "Trial group session"
+          },
+          "detail": {
+            "pl": "60 min, grupa do 4 osób",
+            "en": "60 min, up to 4 players"
+          },
+          "prices": {
+            "lato": 60,
+            "zima": 70
+          }
+        }
+      ]
+    },
+    {
+      "id": "indywidualne",
+      "name": {
+        "pl": "Lekcje indywidualne",
+        "en": "Private lessons"
+      },
+      "unit": {
+        "pl": "za 60 min, kort w cenie",
+        "en": "per 60 min, court included"
+      },
+      "items": [
+        {
+          "id": "1na1-rano",
+          "name": {
+            "pl": "1 na 1",
+            "en": "One-to-one"
+          },
+          "detail": {
+            "pl": "dni robocze do 16:00",
+            "en": "weekdays before 4 pm"
+          },
+          "prices": {
+            "lato": 210,
+            "zima": 260
+          }
+        },
+        {
+          "id": "1na1-szczyt",
+          "name": {
+            "pl": "1 na 1",
+            "en": "One-to-one"
+          },
+          "detail": {
+            "pl": "po 16:00 i w weekendy",
+            "en": "after 4 pm and weekends"
+          },
+          "prices": {
+            "lato": 240,
+            "zima": 300
+          }
+        },
+        {
+          "id": "we-dwoje",
+          "name": {
+            "pl": "We dwoje",
+            "en": "Two players"
+          },
+          "detail": {
+            "pl": "cena za osobę, dni robocze do 16:00",
+            "en": "per person, weekdays before 4 pm"
+          },
+          "prices": {
+            "lato": 120,
+            "zima": 145
+          }
+        },
+        {
+          "id": "karnet-10",
+          "name": {
+            "pl": "Karnet 10 lekcji 1 na 1",
+            "en": "10 one-to-one lessons"
+          },
+          "detail": {
+            "pl": "10% taniej, ważny 4 miesiące",
+            "en": "10% off, valid for 4 months"
+          },
+          "prices": {
+            "lato": 1890,
+            "zima": 2340
+          }
+        }
+      ]
+    },
+    {
+      "id": "grupy",
+      "name": {
+        "pl": "Grupy dorosłych",
+        "en": "Adult groups"
+      },
+      "unit": {
+        "pl": "za osobę, miesięcznie",
+        "en": "per person, monthly"
+      },
+      "items": [
+        {
+          "id": "grupa-3",
+          "name": {
+            "pl": "Grupa 3-osobowa",
+            "en": "Group of 3"
+          },
+          "detail": {
+            "pl": "1× w tygodniu, 60 min",
+            "en": "once a week, 60 min"
+          },
+          "prices": {
+            "lato": 420,
+            "zima": 480
+          }
+        },
+        {
+          "id": "grupa-4",
+          "name": {
+            "pl": "Grupa 4-osobowa",
+            "en": "Group of 4"
+          },
+          "detail": {
+            "pl": "1× w tygodniu, 60 min",
+            "en": "once a week, 60 min"
+          },
+          "prices": {
+            "lato": 340,
+            "zima": 390
+          }
+        },
+        {
+          "id": "grupa-4-2x",
+          "name": {
+            "pl": "Grupa 4-osobowa",
+            "en": "Group of 4"
+          },
+          "detail": {
+            "pl": "2× w tygodniu, 60 min",
+            "en": "twice a week, 60 min"
+          },
+          "prices": {
+            "lato": 620,
+            "zima": 720
+          }
+        }
+      ]
+    },
+    {
+      "id": "dzieci",
+      "name": {
+        "pl": "Dzieci i juniorzy",
+        "en": "Kids and juniors"
+      },
+      "unit": {
+        "pl": "grupy 4–6 osób, miesięcznie",
+        "en": "groups of 4–6, monthly"
+      },
+      "items": [
+        {
+          "id": "dzieci-1x",
+          "name": {
+            "pl": "1× w tygodniu",
+            "en": "Once a week"
+          },
+          "detail": {
+            "pl": "60 min, od 5 lat",
+            "en": "60 min, ages 5+"
+          },
+          "prices": {
+            "lato": 300,
+            "zima": 340
+          }
+        },
+        {
+          "id": "dzieci-2x",
+          "name": {
+            "pl": "2× w tygodniu",
+            "en": "Twice a week"
+          },
+          "detail": {
+            "pl": "60 min, od 5 lat",
+            "en": "60 min, ages 5+"
+          },
+          "prices": {
+            "lato": 560,
+            "zima": 640
+          }
+        }
+      ]
+    },
+    {
+      "id": "kort",
+      "name": {
+        "pl": "Wynajem kortu",
+        "en": "Court hire"
+      },
+      "unit": {
+        "pl": "za godzinę",
+        "en": "per hour"
+      },
+      "items": [
+        {
+          "id": "ceglany-rano",
+          "name": {
+            "pl": "Kort ceglany",
+            "en": "Clay court"
+          },
+          "detail": {
+            "pl": "dni robocze do 16:00",
+            "en": "weekdays before 4 pm"
+          },
+          "prices": {
+            "lato": 80,
+            "zima": null
+          }
+        },
+        {
+          "id": "ceglany-szczyt",
+          "name": {
+            "pl": "Kort ceglany",
+            "en": "Clay court"
+          },
+          "detail": {
+            "pl": "po 16:00 i w weekendy",
+            "en": "after 4 pm and weekends"
+          },
+          "prices": {
+            "lato": 100,
+            "zima": null
+          }
+        },
+        {
+          "id": "twardy-rano",
+          "name": {
+            "pl": "Kort twardy",
+            "en": "Hard court"
+          },
+          "detail": {
+            "pl": "dni robocze do 16:00",
+            "en": "weekdays before 4 pm"
+          },
+          "prices": {
+            "lato": 90,
+            "zima": 130
+          }
+        },
+        {
+          "id": "twardy-szczyt",
+          "name": {
+            "pl": "Kort twardy",
+            "en": "Hard court"
+          },
+          "detail": {
+            "pl": "po 16:00 i w weekendy",
+            "en": "after 4 pm and weekends"
+          },
+          "prices": {
+            "lato": 115,
+            "zima": 180
+          }
+        },
+        {
+          "id": "maszyna",
+          "name": {
+            "pl": "Maszyna do piłek",
+            "en": "Ball machine"
+          },
+          "detail": {
+            "pl": "dopłata do wynajmu kortu",
+            "en": "on top of court hire"
+          },
+          "prices": {
+            "lato": 60,
+            "zima": 60
+          }
+        }
+      ]
+    }
+  ],
+  "notes": [
+    {
+      "pl": "Lekcję indywidualną odwołasz bez opłat do 24 godzin przed jej początkiem.",
+      "en": "Cancel a private lesson free of charge up to 24 hours before it starts."
+    },
+    {
+      "pl": "Opuszczony trening w grupie odrobisz z inną grupą w tym samym miesiącu.",
+      "en": "Missed a group session? Make it up with another group in the same month."
+    },
+    {
+      "pl": "Za semestr zajęć grupowych płatny z góry zapłacisz 7% mniej, a za rodzeństwo 10% mniej.",
+      "en": "Pay for a semester of group classes upfront and save 7% – or 10% for siblings."
+    },
+    {
+      "pl": "Na kort wchodzisz w butach tenisowych albo halowych z płaską, jasną podeszwą. Na mączkę najlepiej sprawdzi się bieżnik w jodełkę – buty do biegania ślizgają się i niszczą nawierzchnię.",
+      "en": "Wear tennis or indoor court shoes with flat, non-marking soles. On clay, a herringbone tread works best – running shoes slip and damage the surface."
+    },
+    {
+      "pl": "Rakietę na lekcję pożyczysz bez dopłaty. Poza lekcjami wypożyczenie kosztuje 20 zł.",
+      "en": "Borrow a racket free during lessons. Outside lessons it costs 20 zł."
+    },
+    {
+      "pl": "Karty MultiSport i Medicover przyjmujemy jako częściową płatność.",
+      "en": "We accept MultiSport and Medicover cards as partial payment."
+    }
+  ]
+}

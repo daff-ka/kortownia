@@ -1,24 +1,10 @@
 <!DOCTYPE html>
-<html lang="pl" data-surface="twardy" data-grid="court">
+<html lang="pl" data-surface="twardy">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script>
-        // Preloader: aktywny tylko z JS. Awaryjnie odsłania stronę, gdyby
-        // moduł preloadera się nie uruchomił (np. zablokowany CDN).
-        document.documentElement.classList.add('is-loading');
-        setTimeout(function () {
-            var r = document.documentElement;
-            if (window.__preloaderAlive || r.classList.contains('is-loaded')) return;
-            r.classList.remove('is-loading');
-            r.classList.add('is-loaded');
-            var p = document.getElementById('preloader');
-            if (p) p.remove();
-        }, 12000);
-        // Porównanie wariantów gridu: ?grid=figma | ?grid=court
-        var g = new URLSearchParams(location.search).get('grid');
-        if (g === 'figma' || g === 'court') document.documentElement.dataset.grid = g;
         try {
             var s = localStorage.getItem('kortownia-surface');
             if (s === 'ceglany' || s === 'twardy') document.documentElement.dataset.surface = s;
@@ -30,32 +16,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@150,900&family=Atkinson+Hyperlegible+Next:wght@400;500;700&family=BBH+Bartle&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
-    <link rel="preload" href="img/3d/racket.glb" as="fetch" type="model/gltf-binary" crossorigin media="(min-width: 1024px)">
-    <link rel="preload" href="img/3d/ball.glb" as="fetch" type="model/gltf-binary" crossorigin media="(min-width: 1024px)">
-    <script type="importmap">
-        {
-            "imports": {
-                "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
-                "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
-            }
-        }
-    </script>
-    <title>Kortownia – szkoła tenisa</title>
-    <meta name="description" content="Treningi tenisa indywidualne i w małych grupach – od pierwszego odbicia po pierwszy mecz ze znajomymi.">
+    <link rel="stylesheet" href="cennik.css">
+    <link rel="preload" href="data/cennik.json" as="fetch" crossorigin>
+    <title>Cennik – Kortownia</title>
+    <meta name="description" content="Cennik szkoły tenisa Kortownia: lekcje indywidualne, grupy dorosłych, zajęcia dla dzieci i wynajem kortu – ceny w sezonie letnim i zimowym.">
     <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
     <link rel="icon" href="img/favicon.ico" sizes="any">
     <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
 </head>
 
-<body>
-
-    <div class="preloader" id="preloader" aria-hidden="true">
-        <div class="preloader__stage">
-            <div class="preloader__ball"></div>
-        </div>
-        <!-- Licznik % tymczasowo ukryty – usuń „hidden”, żeby go przywrócić. -->
-        <div class="preloader__count" hidden><span data-count>000</span>%</div>
-    </div>
+<body class="subpage">
 
     <!-- Tło: rozmyte ukośne cienie (BG-shadow) + ziarno -->
     <div class="bg" aria-hidden="true">
@@ -80,46 +50,17 @@
         <div class="bg__noise"></div>
     </div>
 
-    <!-- Kort (propozycja): linie wg przepisów, rozpięte na układzie strony.
-         Wersja z Figmy: data-grid="figma" na <html> albo ?grid=figma w adresie. -->
-    <div class="court-grid" aria-hidden="true">
-        <i class="cg-line cg-line--outer is-h" style="--x:0%;--y:0%;--w:100%;--h:1px"></i>
-        <i class="cg-line cg-line--outer is-h" style="--x:0%;--y:calc(100% - 1px);--w:100%;--h:1px"></i>
-        <i class="cg-line cg-line--outer is-v" style="--x:0%;--y:0%;--w:1px;--h:100%"></i>
-        <i class="cg-line cg-line--outer is-v" style="--x:calc(100% - 1px);--y:0%;--w:1px;--h:100%"></i>
-        <i class="cg-line cg-line--net is-v" style="--x:50%;--y:-8.33%;--w:1px;--h:116.66%"></i>
-        <i class="cg-line cg-line--singles is-h" style="--x:0%;--y:12.49%;--w:100%;--h:1px"></i>
-        <i class="cg-line cg-line--singles is-h" style="--x:0%;--y:87.51%;--w:100%;--h:1px"></i>
-        <i class="cg-line cg-line--service is-v" style="--x:23.08%;--y:12.49%;--w:1px;--h:75.02%"></i>
-        <i class="cg-line cg-line--service is-v" style="--x:76.92%;--y:12.49%;--w:1px;--h:75.02%"></i>
-        <i class="cg-line cg-line--center is-h" style="--x:23.08%;--y:50%;--w:53.84%;--h:1px"></i>
-        <i class="cg-line cg-line--mark is-h" style="--x:0%;--y:50%;--w:14px;--h:1px"></i>
-        <i class="cg-line cg-line--mark is-h" style="--x:calc(100% - 14px);--y:50%;--w:14px;--h:1px"></i>
-        <i class="cg-post cg-post--a" style="--x:50%;--y:-8.33%"></i>
-        <i class="cg-post cg-post--b" style="--x:50%;--y:108.33%"></i>
-    </div>
-
-    <!-- Linie kortu – wersja z Figmy (strefy układu; środkowa pozioma w app.js) -->
-    <div class="court-lines" aria-hidden="true">
-        <i class="court-line court-line--top"></i>
-        <i class="court-line court-line--mid"></i>
-        <i class="court-line court-line--bottom"></i>
-        <i class="court-line court-line--v court-line--left"></i>
-        <i class="court-line court-line--v court-line--net"></i>
-        <i class="court-line court-line--v court-line--right"></i>
-    </div>
-
     <header class="nav">
         <div class="nav__left">
-            <a class="logo" href="#" aria-label="Kortownia – strona główna">
+            <a class="logo" href="index.html" aria-label="Kortownia – strona główna">
                 <img src="img/logo-dot.svg" width="24" height="24" alt="">
                 <span class="logo__text">kortownia</span>
             </a>
             <nav class="nav__links" aria-label="Główna" data-i18n-aria="navLabel">
-                <a class="nav-link" href="#nasz-kort" data-i18n="navCourt">Nasz kort</a>
-                <a class="nav-link" href="#o-nas" data-i18n="navAbout">O nas</a>
-                <a class="nav-link" href="cennik.html" data-i18n="navPricing">Cennik</a>
-                <a class="nav-link" href="#zapisy" data-i18n="navSignup">Zapisy</a>
+                <a class="nav-link" href="index.html#nasz-kort" data-i18n="navCourt">Nasz kort</a>
+                <a class="nav-link" href="index.html#o-nas" data-i18n="navAbout">O nas</a>
+                <a class="nav-link" href="cennik.html" aria-current="page" data-i18n="navPricing">Cennik</a>
+                <a class="nav-link" href="index.html#zapisy" data-i18n="navSignup">Zapisy</a>
             </nav>
         </div>
         <div class="nav__right">
@@ -135,7 +76,7 @@
                     <button class="lang__option" type="button" role="menuitemradio" data-lang="en" aria-checked="false"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg><span lang="en">English</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                 </div>
             </div>
-            <a class="btn btn--primary btn--sm" href="#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
+            <a class="btn btn--primary btn--sm" href="index.html#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
         </div>
         <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Otwórz menu">
             <span class="menu-button__bar"></span>
@@ -143,63 +84,77 @@
         </button>
     </header>
 
-    <main class="hero">
-        <div class="stage">
-            <h1 class="hero__title" data-i18n="title" data-i18n-breaks>Od pierwszej<span class="brk-d"></span>odbitej piłki<span class="brk-m"></span>do<span class="brk-d"></span>prawdziwej pasji</h1>
+    <main class="pricing">
+        <header class="pricing__head">
+            <p class="pricing__eyebrow" data-i18n="eyebrow">Sezon 2026/27</p>
+            <h1 class="pricing__title" data-i18n="pageHeading">Cennik</h1>
+            <p class="pricing__lead" data-i18n="pricingLead">Każda cena obejmuje kort, piłki i trenera. Rakietę pożyczysz na miejscu bez dopłaty.</p>
+        </header>
 
-            <img class="hero__plus" src="img/plus.svg" width="65.3553" height="68.6161" alt="" aria-hidden="true">
-
-            <div class="kv" aria-hidden="true">
-                <img class="kv__waves kv__waves--desktop" src="img/waves.svg" width="478.916" height="654.358" alt="">
-                <img class="kv__waves kv__waves--mobile" src="img/waves-mobile.svg" width="191.806" height="262.071" alt="">
-                <img class="kv__racket" src="img/racket.png" alt="">
-                <img class="kv__ball" src="img/ball.png" alt="">
-            </div>
-
-            <div class="surface-switch">
-                <span class="surface-switch__label" id="surface-label" data-i18n="surfaceLabel">Kort</span>
-                <div class="switch switch--sliding" role="group" aria-labelledby="surface-label">
-                    <span class="switch__thumb" aria-hidden="true"></span>
-                    <button class="segment" type="button" data-surface="ceglany" aria-pressed="false" data-i18n="surfaceClay">Ceglany</button>
-                    <button class="segment" type="button" data-surface="twardy" aria-pressed="true" data-i18n="surfaceHard">Twardy</button>
-                </div>
+        <!-- Mobile: jedna kolumna sezonu naraz (przełącznik jak nawierzchnia). -->
+        <div class="season-switch">
+            <span class="season-switch__label" id="season-label" data-i18n="seasonLabel">Sezon</span>
+            <div class="switch" role="group" aria-labelledby="season-label">
+                <button class="segment" type="button" data-season="lato" aria-pressed="true" data-i18n="seasonSummer">Lato</button>
+                <button class="segment" type="button" data-season="zima" aria-pressed="false" data-i18n="seasonWinter">Zima</button>
             </div>
         </div>
 
-        <div class="hero__copy">
-            <p class="hero__lead" data-i18n="lead">Treningi indywidualne i w małych grupach –
-od pierwszego odbicia po pierwszy mecz
-ze znajomymi.</p>
-            <div class="hero__cta">
-                <a class="btn btn--primary" href="#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
-                <a class="btn btn--link" href="cennik.html" data-i18n="ctaPricing">Zobacz cennik</a>
-            </div>
+        <!-- Tabela jak kort: siatka dzieli sezony (lato | zima). Treść z data/cennik.json. -->
+        <div class="price-court" data-season="lato">
+            <i class="price-court__net" aria-hidden="true"></i>
+            <table class="price-table">
+                <caption class="sr-only" data-i18n="tableCaption">Ceny w złotych, w sezonie letnim i zimowym</caption>
+                <colgroup>
+                    <col class="price-table__col-offer">
+                    <col class="price-table__col-season">
+                    <col class="price-table__col-season">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th scope="col"><span class="price-table__corner" data-i18n="colOffer">Zajęcia</span></th>
+                        <th scope="col" class="is-lato" data-season-col="lato"></th>
+                        <th scope="col" class="is-zima" data-season-col="zima"></th>
+                    </tr>
+                </thead>
+                <!-- grupy <tbody> wstawia cennik.js -->
+            </table>
+        </div>
+
+        <section class="pricing__notes" aria-labelledby="notes-title">
+            <h2 class="pricing__notes-title" id="notes-title" data-i18n="notesTitle">Dobrze wiedzieć</h2>
+            <ul class="pricing__notes-list" data-notes></ul>
+        </section>
+
+        <div class="pricing__cta">
+            <a class="btn btn--primary" href="index.html#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
+            <p class="pricing__updated" data-updated></p>
         </div>
     </main>
 
-    <!-- Atrybucja CC BY 4.0: link do pełnej informacji (autorzy, źródła,
-         licencja, modyfikacje) w README – dopuszczalne wg sekcji 3(a)(2). -->
-    <!-- Podpowiedź przy piłce (pozycja z kv3d.js; znika po pierwszym odbiciu) -->
-    <div class="kv-hint" aria-hidden="true">
-        <span class="kv-hint__text kv-hint__text--click" data-i18n="kvHintClick">Kliknij, żeby odbić piłkę</span>
-        <span class="kv-hint__text kv-hint__text--tap" data-i18n="kvHintTap">Stuknij, żeby odbić piłkę</span>
-    </div>
-
-    <footer class="credits">
-        <span>© 2026 Dawid Kułaga</span>
-        <span class="credits__sep" aria-hidden="true">|</span>
-        <a href="https://github.com/daff-ka/kortownia#licencje-modeli-3d" target="_blank" rel="noopener" data-i18n="credits">Modele 3D · CC BY</a>
+    <footer class="subpage-foot">
+        <div class="credits">
+            <span>© 2026 Dawid Kułaga</span>
+        </div>
+        <div class="surface-switch">
+            <span class="surface-switch__label" id="surface-label" data-i18n="surfaceLabel">Kort</span>
+            <div class="switch switch--sliding" role="group" aria-labelledby="surface-label">
+                <span class="switch__thumb" aria-hidden="true"></span>
+                <button class="segment" type="button" data-surface="ceglany" aria-pressed="false" data-i18n="surfaceClay">Ceglany</button>
+                <button class="segment" type="button" data-surface="twardy" aria-pressed="true" data-i18n="surfaceHard">Twardy</button>
+            </div>
+        </div>
     </footer>
 
     <div class="mobile-menu" id="mobile-menu" hidden>
         <nav class="mobile-menu__links" aria-label="Główna" data-i18n-aria="navLabel">
-            <a class="mobile-link" href="#nasz-kort" data-i18n="navCourt">Nasz kort</a>
-            <a class="mobile-link" href="#o-nas" data-i18n="navAbout">O nas</a>
-            <a class="mobile-link" href="cennik.html" data-i18n="navPricing">Cennik</a>
-            <a class="mobile-link" href="#zapisy" data-i18n="navSignup">Zapisy</a>
+            <a class="mobile-link" href="index.html#nasz-kort" data-i18n="navCourt">Nasz kort</a>
+            <a class="mobile-link" href="index.html#o-nas" data-i18n="navAbout">O nas</a>
+            <a class="mobile-link" href="cennik.html" aria-current="page" data-i18n="navPricing">Cennik</a>
+            <a class="mobile-link" href="index.html#zapisy" data-i18n="navSignup">Zapisy</a>
         </nav>
         <div class="mobile-menu__cta">
-            <a class="btn btn--primary btn--block" href="#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
+            <a class="btn btn--primary btn--block" href="index.html#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
             <div class="mobile-menu__row">
                 <div class="lang lang--up">
                     <button class="lang__trigger" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu-mobile" aria-label="Język: polski" data-i18n-aria="langCurrent">
@@ -213,15 +168,14 @@ ze znajomymi.</p>
                         <button class="lang__option" type="button" role="menuitemradio" data-lang="en" aria-checked="false"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg><span lang="en">English</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
                     </div>
                 </div>
-                <a class="btn btn--link" href="cennik.html" data-i18n="ctaPricing">Zobacz cennik</a>
+                <a class="btn btn--link" href="index.html" data-i18n="ctaHome">Strona główna</a>
             </div>
         </div>
     </div>
 
+    <script src="cennik.js"></script>
     <script src="booking.js"></script>
     <script src="app.js"></script>
-    <script type="module" src="preloader.js"></script>
-    <script type="module" src="kv3d.js"></script>
 
 </body>
 

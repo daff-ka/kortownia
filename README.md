@@ -20,6 +20,10 @@ i otwórz http://localhost:8000. Linie kortu z makiety Figma: `?grid=figma`.
 
 - `index.html`, `style.css` – układ i style
 - `app.js` – nawierzchnia, język, menu mobilne, linie kortu
+- `cennik.html`, `cennik.css`, `cennik.js` – cennik (tabela budowana z `data/cennik.json`)
+- `data/cennik.json` – ceny i teksty cennika (PL / EN); jedyne miejsce zmiany cen
+- `booking.js` – modal „Umów pierwszą lekcję” otwierany z linków `#zapisy`; tryb testowy
+  (`BOOKING_ENDPOINT = null`) – zgłoszenie trafia tylko do konsoli przeglądarki
 - `kv3d.js` – scena 3D (rakieta, piłka, fale)
 - `preloader.js` – preloader
 - `img/3d/` – skompresowane modele GLB (wersje desktop i mobile)

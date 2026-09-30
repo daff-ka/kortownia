@@ -14,6 +14,9 @@
     --kreda-85: rgba(255, 255, 255, 0.85);
     --siatka: #17230f;
     --kort: #9fd748;
+    /* Błąd w formularzach (tylko na jasnym panelu „kreda”) – kontrast 6,1:1.
+       Stały w obu nawierzchniach. */
+    --blad: #b8300f;
 
     /* Nawierzchnia: Kort twardy (domyślnie) */
     --nawierzchnia: #1164c5;
@@ -420,19 +423,14 @@ html[lang="en"] .lang__flag--en {
 .nav__left {
     display: flex;
     align-items: center;
+    gap: 36px;
 }
 
-/* Dolny lewy róg – lustrzanie do logo. Tekst pierwszego linku
-   wyrównany do krawędzi logo (kompensacja paddingu pigułki 12 px). */
-.corner-nav {
-    position: fixed;
-    left: calc(var(--corner-x) - 12px);
-    bottom: var(--corner-y);
-    transform: translateY(50%);
+/* Linki obok logo (pigułki z 12 px paddingu). */
+.nav__links {
     display: flex;
     align-items: center;
-    gap: 18px;
-    z-index: 10;
+    gap: 6px;
 }
 
 .nav__right {
@@ -897,7 +895,7 @@ html.is-loading .preloader,
 
 /* Wejście hero po odsłonięciu (indywidualne translate/scale nie kolidują
    z transformami pozycjonującymi, np. przełącznika). */
-html.is-loading :is(.nav, .hero__title, .hero__plus, .hero__copy, .corner-nav, .surface-switch) {
+html.is-loading :is(.nav, .hero__title, .hero__plus, .hero__copy, .surface-switch) {
     opacity: 0;
     translate: 0 18px;
 }
@@ -907,7 +905,7 @@ html.is-loading .kv {
     scale: 0.94;
 }
 
-html.is-loaded :is(.nav, .hero__title, .hero__plus, .hero__copy, .corner-nav, .surface-switch, .kv) {
+html.is-loaded :is(.nav, .hero__title, .hero__plus, .hero__copy, .surface-switch, .kv) {
     transition:
         opacity 0.8s ease var(--intro-delay, 0s),
         translate 1s cubic-bezier(0.2, 0.8, 0.2, 1) var(--intro-delay, 0s),
@@ -919,7 +917,6 @@ html.is-loaded :is(.nav, .hero__title, .hero__plus, .hero__copy, .corner-nav, .s
 .hero__title { --intro-delay: 0.35s; }
 .hero__plus { --intro-delay: 0.5s; }
 .hero__copy { --intro-delay: 0.55s; }
-.corner-nav,
 .surface-switch { --intro-delay: 0.7s; }
 
 /* ---------- Podpowiedź przy piłce ----------
@@ -1009,11 +1006,12 @@ body.menu-open .kv-hint {
    Maksymalnie dyskretnie: desktop – środek samego dołu ekranu,
    mobile – koniec strony. */
 
+/* Dolny lewy róg – lustrzanie do logo. */
 .credits {
     position: fixed;
-    left: 50%;
-    bottom: 12px;
-    translate: -50% 0;
+    left: var(--corner-x);
+    bottom: var(--corner-y);
+    transform: translateY(50%);
     font-size: 10px;
     line-height: 1.4;
     letter-spacing: 0.02em;
@@ -1134,7 +1132,7 @@ html.is-loading .credits {
     }
 
     .nav__right,
-    .corner-nav {
+    .nav__links {
         display: none;
     }
 
@@ -1169,7 +1167,7 @@ html.is-loading .credits {
 
     .credits {
         position: static;
-        translate: none;
+        transform: none;
         margin-top: 24px;
         text-align: center;
         white-space: normal;
@@ -1351,5 +1349,402 @@ html.is-loading .credits {
 @media (prefers-reduced-motion: reduce) {
     * {
         transition: none !important;
+    }
+}
+
+/* ---------- Formularze (Figma: Design System → Formularze) ----------
+   Na jasnym panelu „kreda”: tekst „siatka”, obrysy siatka 20%. */
+
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip {
+    position: relative;
+    cursor: pointer;
+}
+
+.chip input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.chip__body {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border: 1px solid rgba(23, 35, 15, 0.2);
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1.4;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.chip__sub {
+    font-weight: 400;
+    opacity: 0.6;
+}
+
+.chip:hover .chip__body {
+    border-color: var(--siatka);
+}
+
+.chip input:checked + .chip__body {
+    background: var(--siatka);
+    border-color: var(--siatka);
+    color: var(--kreda);
+}
+
+.chip input:checked + .chip__body .chip__sub {
+    color: var(--pilka);
+    opacity: 1;
+}
+
+.chip input:focus-visible + .chip__body,
+.check input:focus-visible + .check__box {
+    outline: 2px solid var(--siatka);
+    outline-offset: 2px;
+}
+
+.input {
+    width: 100%;
+    height: 52px;
+    padding: 0 20px;
+    border: 1px solid rgba(23, 35, 15, 0.2);
+    border-radius: 999px;
+    background: transparent;
+    font: inherit;
+    font-size: 16px;
+    color: var(--siatka);
+    transition: border-color 0.15s ease;
+}
+
+.input::placeholder {
+    color: rgba(23, 35, 15, 0.45);
+}
+
+.input:hover {
+    border-color: rgba(23, 35, 15, 0.5);
+}
+
+.input:focus {
+    outline: none;
+    border: 2px solid var(--siatka);
+    padding: 0 19px;
+}
+
+.input[aria-invalid="true"] {
+    border: 2px solid var(--blad);
+    padding: 0 19px;
+}
+
+.check {
+    display: flex;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.check input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.check__box {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    margin-top: 1px;
+    border: 1px solid rgba(23, 35, 15, 0.35);
+    border-radius: 6px;
+    color: transparent;
+    transition: background-color 0.15s ease;
+}
+
+.check__box svg {
+    width: 11px;
+}
+
+.check input:checked + .check__box {
+    background: var(--siatka);
+    border-color: var(--siatka);
+    color: var(--pilka);
+}
+
+.check input[aria-invalid="true"] + .check__box {
+    border: 2px solid var(--blad);
+}
+
+.check__text {
+    font-size: 14px;
+    line-height: 1.4;
+    color: rgba(23, 35, 15, 0.75);
+}
+
+.close-btn {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    background: rgba(23, 35, 15, 0.06);
+    color: var(--siatka);
+    transition: background-color 0.15s ease;
+}
+
+.close-btn:hover {
+    background: rgba(23, 35, 15, 0.12);
+}
+
+.close-btn svg {
+    width: 14px;
+}
+
+/* ---------- Modal: Umów pierwszą lekcję ---------- */
+
+html:has(.booking[open]) {
+    overflow: hidden;
+}
+
+.booking {
+    width: min(640px, 100% - 32px);
+    max-width: none;
+    max-height: calc(100% - 48px);
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: 32px;
+    background: var(--kreda);
+    color: var(--siatka);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+    overscroll-behavior: contain;
+}
+
+.booking.is-sent {
+    width: min(560px, 100% - 32px);
+}
+
+.booking::backdrop {
+    background: rgba(23, 35, 15, 0.6);
+}
+
+.booking[open] {
+    animation: booking-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.booking[open]::backdrop {
+    animation: booking-fade 0.35s ease;
+}
+
+@keyframes booking-in {
+    from { opacity: 0; translate: 0 16px; }
+}
+
+@keyframes booking-fade {
+    from { opacity: 0; }
+}
+
+.booking__panel {
+    padding: 48px;
+}
+
+.booking__form,
+.booking__done {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+
+.booking__done {
+    gap: 24px;
+}
+
+.booking__form[hidden],
+.booking__done[hidden] {
+    display: none;
+}
+
+.booking__head,
+.booking__done-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.booking__title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 150%;
+    font-variation-settings: "wdth" 150;
+    font-size: 28px;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+
+.booking__title:focus {
+    outline: none;
+}
+
+.booking__lead {
+    margin-top: 10px;
+    font-size: 16px;
+    line-height: 26px;
+    color: rgba(23, 35, 15, 0.75);
+}
+
+.booking__done .booking__lead {
+    margin-top: 0;
+}
+
+.booking__field {
+    min-width: 0;
+    border: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.booking__label {
+    padding: 0;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(23, 35, 15, 0.7);
+}
+
+/* legend nie reaguje na gap fieldsetu */
+legend.booking__label {
+    margin-bottom: 10px;
+}
+
+.booking__row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.booking__error {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--blad);
+}
+
+.booking__error[hidden] {
+    display: none;
+}
+
+.booking__actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.booking__note {
+    font-size: 14px;
+    color: rgba(23, 35, 15, 0.6);
+}
+
+.booking__ball {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--pilka);
+}
+
+.booking__summary {
+    display: grid;
+    gap: 8px;
+    padding: 16px 20px;
+    border-radius: 20px;
+    background: rgba(23, 35, 15, 0.05);
+    font-size: 14px;
+    line-height: 1.4;
+}
+
+.booking__summary div {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.booking__summary dt {
+    color: rgba(23, 35, 15, 0.6);
+}
+
+.booking__summary dd {
+    font-weight: 700;
+    text-align: right;
+}
+
+.booking__test {
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+    color: rgba(23, 35, 15, 0.6);
+}
+
+.booking__done .btn {
+    align-self: flex-start;
+}
+
+/* Mobile: formularz na cały ekran, potwierdzenie jako arkusz od dołu. */
+@media (max-width: 639px) {
+    .booking {
+        width: 100%;
+        max-width: none;
+        height: 100%;
+        max-height: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* Dialog modalny ma domyślnie inset 0 – arkusz przypinamy tylko do dołu. */
+    .booking.is-sent {
+        inset: auto 0 0;
+        width: 100%;
+        height: auto;
+        margin: 0;
+        border-radius: 24px 24px 0 0;
+    }
+
+    .booking__panel {
+        padding: 24px 16px;
+    }
+
+    .booking__title {
+        font-size: 24px;
+    }
+
+    .booking__row {
+        grid-template-columns: 1fr;
+    }
+
+    .booking__actions {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+    }
+
+    .booking__done .btn {
+        align-self: stretch;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .booking[open],
+    .booking[open]::backdrop {
+        animation: none;
     }
 }
