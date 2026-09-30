@@ -88,6 +88,8 @@ const BOOKING_ENDPOINT = null;
 
     const dialog = document.createElement('dialog');
     dialog.className = 'booking';
+    // Microsoft Clarity: nie nagrywa treści formularza (imię, telefon).
+    dialog.setAttribute('data-clarity-mask', 'True');
     dialog.setAttribute('aria-labelledby', 'booking-title');
     dialog.innerHTML = `
         <div class="booking__panel">

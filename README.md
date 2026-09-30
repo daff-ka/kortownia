@@ -24,6 +24,8 @@ i otwórz http://localhost:8000. Linie kortu z makiety Figma: `?grid=figma`.
 - `data/cennik.json` – ceny i teksty cennika (PL / EN); jedyne miejsce zmiany cen
 - `polityka-prywatnosci.html`, `polityka.css` – polityka prywatności (PL / EN w jednym pliku);
   `<mark class="todo">` oznacza zmyślone dane firmy do uzupełnienia
+- `consent.js` – baner zgody; Microsoft Clarity ładuje się dopiero po „Akceptuję”
+  (decyzja w localStorage `kortownia-consent`, zmiana: „Ustawienia cookies” w stopce)
 - `booking.js` – modal „Umów pierwszą lekcję” otwierany z linków `#zapisy`; tryb testowy
   (`BOOKING_ENDPOINT = null`) – zgłoszenie trafia tylko do konsoli przeglądarki
 - `kv3d.js` – scena 3D (rakieta, piłka, fale)

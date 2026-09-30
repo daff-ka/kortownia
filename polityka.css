@@ -225,3 +225,9 @@ html[lang="en"] .legal__lang[lang="pl"] {
         gap: 6px;
     }
 }
+
+.legal__text a {
+    color: var(--kreda);
+    text-decoration: underline;
+    text-underline-position: from-font;
+}
