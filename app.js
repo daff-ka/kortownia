@@ -81,7 +81,7 @@ const translations = {
         langCurrent: 'Language: English',
         cta: 'Book your first lesson',
         ctaPricing: 'See pricing',
-        title: 'From the first|dball you hit|mto a|dreal passion',
+        title: 'From your very|dfirst ball|mto a|dlifelong passion',
         lead: 'One-to-one and small-group coaching –\nfrom your very first hit to your first\nmatch with friends.',
         surfaceLabel: 'Court',
         surfaceClay: 'Clay',
