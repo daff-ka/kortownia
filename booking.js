@@ -25,7 +25,8 @@ const BOOKING_ENDPOINT = null;
         bkTimeWeekend: 'Weekend',
         bkName: 'Imię',
         bkPhone: 'Telefon',
-        bkConsent: 'Zgadzam się na kontakt telefoniczny w sprawie lekcji. Dane przetwarzamy zgodnie z polityką prywatności.',
+        bkConsent: 'Zgadzam się na kontakt telefoniczny w sprawie lekcji. Dane przetwarzamy zgodnie z',
+        bkConsentLink: 'polityką prywatności',
         bkSubmit: 'Wyślij zgłoszenie',
         bkPromise: 'Bez zobowiązań – płacisz dopiero na korcie.',
         bkErrName: 'Wpisz imię, żeby trener wiedział, do kogo dzwoni.',
@@ -57,7 +58,8 @@ const BOOKING_ENDPOINT = null;
         bkTimeWeekend: 'Weekends',
         bkName: 'First name',
         bkPhone: 'Phone',
-        bkConsent: 'I agree to be contacted by phone about the lesson. We process your data in line with our privacy policy.',
+        bkConsent: 'I agree to be contacted by phone about the lesson. We process your data in line with our',
+        bkConsentLink: 'privacy policy',
         bkSubmit: 'Send request',
         bkPromise: 'No commitment – you only pay on court.',
         bkErrName: 'Enter your first name so the coach knows who they’re calling.',
@@ -125,7 +127,7 @@ const BOOKING_ENDPOINT = null;
                     <label class="check">
                         <input type="checkbox" name="consent" required aria-describedby="bk-consent-err">
                         <span class="check__box" aria-hidden="true"><svg viewBox="0 0 12 10"><path d="M1 5l3.5 3.5L11 1" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-                        <span class="check__text" data-i18n="bkConsent"></span>
+                        <span class="check__text"><span data-i18n="bkConsent"></span> <a href="polityka-prywatnosci.html" target="_blank" rel="noopener" data-i18n="bkConsentLink"></a>.</span>
                     </label>
                     <p class="booking__error" id="bk-consent-err" data-error="consent" hidden></p>
                 </div>
@@ -207,6 +209,35 @@ const BOOKING_ENDPOINT = null;
         if (first) form.elements[first].focus();
         return first ? null : { name, phone: digits };
     }
+
+    /* Telefon formatowany w trakcie pisania: 600 123 456 (z +48: +48 600 123 456).
+       Kursor zostaje za tą samą cyfrą, także przy poprawkach w środku numeru. */
+    function formatPhone(value) {
+        const plus = value.trim().startsWith('+');
+        let digits = value.replace(/\D/g, '').replace(/^00/, '');
+        let prefix = '';
+        if (plus || (digits.length > 9 && digits.startsWith('48'))) {
+            prefix = `+${digits.slice(0, 2)} `;
+            digits = digits.slice(2);
+        }
+        digits = digits.slice(0, 9);
+        return (prefix + digits.replace(/(\d{3})(?=\d)/g, '$1 ')).trimEnd();
+    }
+
+    const phoneInput = form.elements.phone;
+    phoneInput.addEventListener('input', (e) => {
+        if (e.inputType && e.inputType.startsWith('delete') && /\s$/.test(phoneInput.value)) return;
+        const caret = phoneInput.selectionStart;
+        const digitsBefore = phoneInput.value.slice(0, caret).replace(/\D/g, '').length;
+        const formatted = formatPhone(phoneInput.value);
+        if (formatted === phoneInput.value) return;
+        phoneInput.value = formatted;
+        let pos = 0;
+        for (let seen = 0; pos < formatted.length && seen < digitsBefore; pos++) {
+            if (/\d/.test(formatted[pos])) seen++;
+        }
+        phoneInput.setSelectionRange(pos, pos);
+    });
 
     ['name', 'phone', 'consent'].forEach((k) => {
         form.elements[k].addEventListener(k === 'consent' ? 'change' : 'input', () => {

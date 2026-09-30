@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pl" data-surface="twardy">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        try {
+            var s = localStorage.getItem('kortownia-surface');
+            if (s === 'ceglany' || s === 'twardy') document.documentElement.dataset.surface = s;
+        } catch (e) {}
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@150,900&family=Atkinson+Hyperlegible+Next:wght@400;500;700&family=BBH+Bartle&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="polityka.css">
+    <title>Polityka prywatności – Kortownia</title>
+    <meta name="description" content="Polityka prywatności szkoły tenisa Kortownia: jakie dane zbieramy przez formularz zapisu, po co, jak długo je przechowujemy i jakie masz prawa.">
+    <link rel="icon" href="img/favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="img/favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+</head>
+
+<body class="subpage">
+
+    <!-- Tło: rozmyte ukośne cienie (BG-shadow) + ziarno -->
+    <div class="bg" aria-hidden="true">
+        <svg class="bg__svg bg__svg--desktop" width="2109" height="1100" viewBox="0 0 2109 1100" overflow="visible">
+            <defs>
+                <filter id="bg-blur" filterUnits="userSpaceOnUse" x="-3000" y="-3000" width="7000" height="7000">
+                    <feGaussianBlur stdDeviation="60" />
+                </filter>
+            </defs>
+            <g id="bg-shapes" filter="url(#bg-blur)" fill="#000">
+                <rect x="-2157.266" y="-1301.834" width="2635.036" height="1456.137" opacity=".26" transform="rotate(-44.04 -839.748 -573.765)" />
+                <rect x="-1206.129" y="364.943" width="2635.036" height="147.119" opacity=".26" transform="rotate(-38.43 111.389 438.502)" />
+                <rect x="-747.009" y="730.633" width="2635.036" height="147.119" opacity=".26" transform="rotate(-38.43 570.509 804.192)" />
+                <rect x="-1000.589" y="479.723" width="2635.036" height="147.119" opacity=".26" transform="rotate(-38.43 316.929 553.282)" />
+                <rect x="-851.658" y="554.919" width="2635.036" height="147.119" opacity=".26" transform="rotate(-90 465.86 628.478)" />
+            </g>
+            <rect x="510.53" y="1472.8" width="2635.036" height="479.466" opacity=".26" transform="rotate(-61.13 1828.05 1712.53)" filter="url(#bg-blur)" />
+        </svg>
+        <svg class="bg__svg bg__svg--mobile" width="390" height="868" viewBox="0 0 487.5 1085" overflow="visible">
+            <use href="#bg-shapes" />
+        </svg>
+        <div class="bg__noise"></div>
+    </div>
+
+    <header class="nav">
+        <div class="nav__left">
+            <a class="logo" href="index.html" aria-label="Kortownia – strona główna">
+                <img src="img/logo-dot.svg" width="24" height="24" alt="">
+                <span class="logo__text">kortownia</span>
+            </a>
+            <nav class="nav__links" aria-label="Główna" data-i18n-aria="navLabel">
+                <a class="nav-link" href="index.html#nasz-kort" data-i18n="navCourt">Nasz kort</a>
+                <a class="nav-link" href="index.html#o-nas" data-i18n="navAbout">O nas</a>
+                <a class="nav-link" href="cennik.html" data-i18n="navPricing">Cennik</a>
+                <a class="nav-link" href="index.html#zapisy" data-i18n="navSignup">Zapisy</a>
+            </nav>
+        </div>
+        <div class="nav__right">
+            <div class="lang">
+                <button class="lang__trigger" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu-nav" aria-label="Język: polski" data-i18n-aria="langCurrent">
+                    <span class="lang__flag lang__flag--pl"><svg class="flag" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="10" fill="#fff"/><rect y="10" width="20" height="10" fill="#dc143c"/></svg></span>
+                    <span class="lang__flag lang__flag--en"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg></span>
+                    <span class="lang__code" data-i18n="langCode">PL</span>
+                    <svg class="lang__chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </button>
+                <div class="lang__menu" id="lang-menu-nav" role="menu" aria-label="Język" data-i18n-aria="langLabel" hidden>
+                    <button class="lang__option" type="button" role="menuitemradio" data-lang="pl" aria-checked="true"><svg class="flag" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="10" fill="#fff"/><rect y="10" width="20" height="10" fill="#dc143c"/></svg><span lang="pl">Polski</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    <button class="lang__option" type="button" role="menuitemradio" data-lang="en" aria-checked="false"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg><span lang="en">English</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                </div>
+            </div>
+            <a class="btn btn--primary btn--sm" href="index.html#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
+        </div>
+        <button class="menu-button" type="button" aria-expanded="false" aria-controls="mobile-menu" aria-label="Otwórz menu">
+            <span class="menu-button__bar"></span>
+            <span class="menu-button__bar"></span>
+        </button>
+    </header>
+
+    <!-- Treść w dwóch językach; widoczna wersja zależy od html[lang] (polityka.css).
+         <mark class="todo"> = dane przykładowe, do uzupełnienia przed publikacją. -->
+    <main class="legal">
+        <div class="legal__lang" lang="pl">
+            <header class="legal__head">
+                <p class="legal__eyebrow">Obowiązuje od 30 września 2026</p>
+                <h1 class="legal__title">Polityka prywatności</h1>
+                <p class="legal__lead">Wyjaśniamy, jakie dane zbieramy przez formularz zapisu, po co i jak długo je przechowujemy.</p>
+                <p class="legal__legend"><mark class="todo">Na czerwono</mark> – dane przykładowe, do uzupełnienia przed publikacją.</p>
+            </header>
+
+            <div class="legal__body">
+                <nav class="legal__toc" aria-labelledby="toc-pl">
+                    <h2 class="legal__toc-title" id="toc-pl">Spis treści</h2>
+                    <ol>
+                        <li><a href="#administrator">Kto jest administratorem danych</a></li>
+                        <li><a href="#dane">Jakie dane zbieramy i po co</a></li>
+                        <li><a href="#dobrowolnosc">Czy musisz podać dane</a></li>
+                        <li><a href="#okres">Jak długo przechowujemy dane</a></li>
+                        <li><a href="#odbiorcy">Komu przekazujemy dane</a></li>
+                        <li><a href="#prawa">Twoje prawa</a></li>
+                        <li><a href="#przegladarka">Pamięć przeglądarki</a></li>
+                        <li><a href="#zmiany">Zmiany polityki</a></li>
+                    </ol>
+                </nav>
+
+                <div class="legal__text">
+                    <section id="administrator">
+                        <h2>Kto jest administratorem danych</h2>
+                        <p>Administratorem Twoich danych osobowych jest:</p>
+                        <dl class="legal__card">
+                            <div><dt>Nazwa</dt><dd><mark class="todo">Przykładowa Firma Sp. z o.o.</mark></dd></div>
+                            <div><dt>Adres</dt><dd><mark class="todo">ul. Przykładowa 1, 00-000 Miasto</mark></dd></div>
+                            <div><dt>NIP</dt><dd><mark class="todo">000-000-00-00</mark></dd></div>
+                            <div><dt>REGON</dt><dd><mark class="todo">000000000</mark></dd></div>
+                            <div><dt>E-mail w sprawach danych</dt><dd><mark class="todo">dane@example.com</mark></dd></div>
+                            <div><dt>Telefon</dt><dd><mark class="todo">000 000 000</mark></dd></div>
+                        </dl>
+                        <p>W sprawach dotyczących danych osobowych napisz na adres e-mail podany wyżej.</p>
+                    </section>
+
+                    <section id="dane">
+                        <h2>Jakie dane zbieramy i po co</h2>
+                        <p>Gdy wysyłasz formularz „Umów pierwszą lekcję”, zbieramy: imię, numer telefonu, wybrane zajęcia, poziom gry i pasujące pory oraz datę wyrażenia zgody.</p>
+                        <p>Używamy ich tylko po to, żeby trener mógł do Ciebie oddzwonić i umówić pierwszą lekcję. Podstawą jest Twoja zgoda (art. 6 ust. 1 lit. a RODO) oraz działania na Twoje żądanie przed zawarciem umowy (art. 6 ust. 1 lit. b RODO).</p>
+                    </section>
+
+                    <section id="dobrowolnosc">
+                        <h2>Czy musisz podać dane</h2>
+                        <p>Podanie danych jest dobrowolne, ale bez imienia i numeru telefonu nie możemy oddzwonić.</p>
+                    </section>
+
+                    <section id="okres">
+                        <h2>Jak długo przechowujemy dane</h2>
+                        <p>Zgłoszenie przechowujemy 30 dni od wysłania. Jeśli zapiszesz się na zajęcia, dane potrzebne do ich prowadzenia i rozliczeń przechowujemy przez czas trwania zajęć i tak długo, jak wymagają tego przepisy podatkowe.</p>
+                    </section>
+
+                    <section id="odbiorcy">
+                        <h2>Komu przekazujemy dane</h2>
+                        <p>Dane trafiają tylko do firm, które pomagają nam obsłużyć zgłoszenie:</p>
+                        <ul>
+                            <li>dostawcy hostingu strony i serwera, który przyjmuje zgłoszenia,</li>
+                            <li>Meta Platforms Ireland Ltd. (WhatsApp) – przez komunikator powiadamiamy trenera o nowym zgłoszeniu.</li>
+                        </ul>
+                        <p>Meta może przetwarzać dane także poza Europejskim Obszarem Gospodarczym, na podstawie standardowych klauzul umownych zatwierdzonych przez Komisję Europejską. Nie sprzedajemy danych i nie używamy ich do reklam.</p>
+                    </section>
+
+                    <section id="prawa">
+                        <h2>Twoje prawa</h2>
+                        <p>Masz prawo do:</p>
+                        <ul>
+                            <li>dostępu do swoich danych i otrzymania ich kopii,</li>
+                            <li>sprostowania, usunięcia i ograniczenia przetwarzania,</li>
+                            <li>przeniesienia danych i sprzeciwu wobec przetwarzania,</li>
+                            <li>wycofania zgody w dowolnym momencie – nie wpływa to na zgodność z prawem przetwarzania przed jej wycofaniem.</li>
+                        </ul>
+                        <p>Jeśli uważasz, że przetwarzamy dane niezgodnie z prawem, możesz złożyć skargę do Prezesa Urzędu Ochrony Danych Osobowych (ul. Stawki 2, 00-193 Warszawa).</p>
+                    </section>
+
+                    <section id="przegladarka">
+                        <h2>Pamięć przeglądarki</h2>
+                        <p>Strona nie używa plików cookies ani narzędzi analitycznych. W pamięci przeglądarki (localStorage) zapisujemy tylko dwa ustawienia: wybraną nawierzchnię kortu i język. Nie trafiają one do nas – usuniesz je, czyszcząc dane strony w przeglądarce.</p>
+                    </section>
+
+                    <section id="zmiany">
+                        <h2>Zmiany polityki</h2>
+                        <p>Gdy zmienimy sposób przetwarzania danych, zaktualizujemy tę stronę i datę na górze.</p>
+                    </section>
+                </div>
+            </div>
+        </div>
+
+        <div class="legal__lang" lang="en">
+            <header class="legal__head">
+                <p class="legal__eyebrow">Effective from 30 September 2026</p>
+                <h1 class="legal__title">Privacy policy</h1>
+                <p class="legal__lead">What data we collect through the booking form, why, and how long we keep it.</p>
+                <p class="legal__legend"><mark class="todo">In red</mark> – sample details, to be filled in before publishing.</p>
+            </header>
+
+            <div class="legal__body">
+                <nav class="legal__toc" aria-labelledby="toc-en">
+                    <h2 class="legal__toc-title" id="toc-en">Contents</h2>
+                    <ol>
+                        <li><a href="#controller">Who controls your data</a></li>
+                        <li><a href="#data">What we collect and why</a></li>
+                        <li><a href="#voluntary">Do you have to share it</a></li>
+                        <li><a href="#retention">How long we keep it</a></li>
+                        <li><a href="#recipients">Who we share it with</a></li>
+                        <li><a href="#rights">Your rights</a></li>
+                        <li><a href="#browser">Browser storage</a></li>
+                        <li><a href="#changes">Changes to this policy</a></li>
+                    </ol>
+                </nav>
+
+                <div class="legal__text">
+                    <section id="controller">
+                        <h2>Who controls your data</h2>
+                        <p>The controller of your personal data is:</p>
+                        <dl class="legal__card">
+                            <div><dt>Name</dt><dd><mark class="todo">Przykładowa Firma Sp. z o.o.</mark></dd></div>
+                            <div><dt>Address</dt><dd><mark class="todo">ul. Przykładowa 1, 00-000 Miasto</mark></dd></div>
+                            <div><dt>Tax ID (NIP)</dt><dd><mark class="todo">000-000-00-00</mark></dd></div>
+                            <div><dt>Company ID (REGON)</dt><dd><mark class="todo">000000000</mark></dd></div>
+                            <div><dt>Data protection e-mail</dt><dd><mark class="todo">dane@example.com</mark></dd></div>
+                            <div><dt>Phone</dt><dd><mark class="todo">000 000 000</mark></dd></div>
+                        </dl>
+                        <p>For anything about your personal data, write to the e-mail address above.</p>
+                    </section>
+
+                    <section id="data">
+                        <h2>What we collect and why</h2>
+                        <p>When you send the “Book your first lesson” form, we collect your first name, phone number, the session, level and times you chose, and the date you gave consent.</p>
+                        <p>We use them only so a coach can call you back and book your first lesson. The legal basis is your consent (Art. 6(1)(a) GDPR) and steps taken at your request before entering into a contract (Art. 6(1)(b) GDPR).</p>
+                    </section>
+
+                    <section id="voluntary">
+                        <h2>Do you have to share it</h2>
+                        <p>Sharing your data is voluntary, but without your name and phone number we can’t call you back.</p>
+                    </section>
+
+                    <section id="retention">
+                        <h2>How long we keep it</h2>
+                        <p>We keep a request for 30 days after it’s sent. If you sign up for classes, we keep the data needed to run and invoice them for as long as the classes last and as long as tax law requires.</p>
+                    </section>
+
+                    <section id="recipients">
+                        <h2>Who we share it with</h2>
+                        <p>Your data only goes to companies that help us handle your request:</p>
+                        <ul>
+                            <li>the provider hosting this website and the server that receives requests,</li>
+                            <li>Meta Platforms Ireland Ltd. (WhatsApp) – we use it to notify the coach about a new request.</li>
+                        </ul>
+                        <p>Meta may also process data outside the European Economic Area, under standard contractual clauses approved by the European Commission. We don’t sell your data or use it for advertising.</p>
+                    </section>
+
+                    <section id="rights">
+                        <h2>Your rights</h2>
+                        <p>You have the right to:</p>
+                        <ul>
+                            <li>access your data and get a copy of it,</li>
+                            <li>have it corrected, erased or its processing restricted,</li>
+                            <li>data portability and to object to processing,</li>
+                            <li>withdraw your consent at any time – this doesn’t affect processing carried out before you withdrew it.</li>
+                        </ul>
+                        <p>If you believe we process your data unlawfully, you can complain to the President of the Personal Data Protection Office (UODO, ul. Stawki 2, 00-193 Warsaw, Poland).</p>
+                    </section>
+
+                    <section id="browser">
+                        <h2>Browser storage</h2>
+                        <p>This website doesn’t use cookies or analytics. We save only two settings in your browser’s storage (localStorage): the court surface and the language you chose. They never reach us – clear the site data in your browser to remove them.</p>
+                    </section>
+
+                    <section id="changes">
+                        <h2>Changes to this policy</h2>
+                        <p>If we change how we process data, we’ll update this page and the date at the top.</p>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="subpage-foot">
+        <div class="credits">
+            <span>© 2026 Dawid Kułaga</span>
+        </div>
+        <div class="surface-switch">
+            <span class="surface-switch__label" id="surface-label" data-i18n="surfaceLabel">Kort</span>
+            <div class="switch switch--sliding" role="group" aria-labelledby="surface-label">
+                <span class="switch__thumb" aria-hidden="true"></span>
+                <button class="segment" type="button" data-surface="ceglany" aria-pressed="false" data-i18n="surfaceClay">Ceglany</button>
+                <button class="segment" type="button" data-surface="twardy" aria-pressed="true" data-i18n="surfaceHard">Twardy</button>
+            </div>
+        </div>
+    </footer>
+
+    <div class="mobile-menu" id="mobile-menu" hidden>
+        <nav class="mobile-menu__links" aria-label="Główna" data-i18n-aria="navLabel">
+            <a class="mobile-link" href="index.html#nasz-kort" data-i18n="navCourt">Nasz kort</a>
+            <a class="mobile-link" href="index.html#o-nas" data-i18n="navAbout">O nas</a>
+            <a class="mobile-link" href="cennik.html" data-i18n="navPricing">Cennik</a>
+            <a class="mobile-link" href="index.html#zapisy" data-i18n="navSignup">Zapisy</a>
+        </nav>
+        <div class="mobile-menu__cta">
+            <a class="btn btn--primary btn--block" href="index.html#zapisy" data-i18n="cta">Umów pierwszą lekcję</a>
+            <div class="mobile-menu__row">
+                <div class="lang lang--up">
+                    <button class="lang__trigger" type="button" aria-haspopup="menu" aria-expanded="false" aria-controls="lang-menu-mobile" aria-label="Język: polski" data-i18n-aria="langCurrent">
+                        <span class="lang__flag lang__flag--pl"><svg class="flag" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="10" fill="#fff"/><rect y="10" width="20" height="10" fill="#dc143c"/></svg></span>
+                        <span class="lang__flag lang__flag--en"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg></span>
+                        <span class="lang__code" data-i18n="langCode">PL</span>
+                        <svg class="lang__chevron" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <div class="lang__menu" id="lang-menu-mobile" role="menu" aria-label="Język" data-i18n-aria="langLabel" hidden>
+                        <button class="lang__option" type="button" role="menuitemradio" data-lang="pl" aria-checked="true"><svg class="flag" viewBox="0 0 20 20" aria-hidden="true"><rect width="20" height="10" fill="#fff"/><rect y="10" width="20" height="10" fill="#dc143c"/></svg><span lang="pl">Polski</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                        <button class="lang__option" type="button" role="menuitemradio" data-lang="en" aria-checked="false"><svg class="flag" viewBox="0 0 60 60" aria-hidden="true"><rect width="60" height="60" fill="#012169"/><path d="M0 0L60 60M60 0L0 60" stroke="#fff" stroke-width="12"/><path d="M0 0L60 60M60 0L0 60" stroke="#c8102e" stroke-width="5"/><path d="M30 0V60M0 30H60" stroke="#fff" stroke-width="18"/><path d="M30 0V60M0 30H60" stroke="#c8102e" stroke-width="10"/></svg><span lang="en">English</span><svg class="lang__check" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                    </div>
+                </div>
+                <a class="btn btn--link" href="index.html" data-i18n="ctaHome">Strona główna</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.pageI18n = {
+            pl: { pageTitle: 'Polityka prywatności – Kortownia', ctaHome: 'Strona główna' },
+            en: { pageTitle: 'Privacy policy – Kortownia', ctaHome: 'Home' },
+        };
+    </script>
+    <script src="booking.js"></script>
+    <script src="app.js"></script>
+
+</body>
+
+</html>

@@ -2,16 +2,6 @@
    Tabela jak kort widziany z góry: zewnętrzna ramka = linie boczne,
    pionowa „siatka” ze słupkami dzieli sezony (lato | zima). */
 
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-}
-
 .pricing {
     /* Szerokość kolumn: nazwa zajęć | lato | zima. Siatka stoi na granicy
        lato/zima, więc jej położenie wynika z tych samych wartości. */
@@ -333,41 +323,6 @@
     color: var(--kreda-85);
 }
 
-/* ---------- Stopka podstrony ---------- */
-
-.subpage-foot {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 24px;
-    margin-top: clamp(80px, 9vw, 128px);
-    padding: 0 var(--corner-x);
-}
-
-.nav-link[aria-current="page"],
-.mobile-link[aria-current="page"] {
-    color: var(--pilka);
-}
-
-.subpage :is(.surface-switch, .credits) {
-    position: static;
-    transform: none;
-}
-
-/* Strona główna na desktopie mieści się w jednym ekranie (bez przewijania) –
-   podstrona jest dłuższa, więc przywracamy przewijanie w pionie. */
-@media (min-width: 1024px) {
-    html:has(body.subpage),
-    body.subpage {
-        height: auto;
-        overflow-y: visible;
-    }
-
-    body.subpage {
-        padding-bottom: 40px;
-    }
-}
-
 /* ---------- Mobile ---------- */
 
 @media (max-width: 1023px) {
@@ -460,17 +415,6 @@
         flex-direction: column;
         align-items: stretch;
         text-align: center;
-    }
-
-    .subpage-foot {
-        flex-direction: column;
-        width: calc(358 * var(--m));
-        margin-inline: auto;
-        padding: 0;
-    }
-
-    body.menu-open :is(.pricing, .subpage-foot) {
-        visibility: hidden;
     }
 }
 

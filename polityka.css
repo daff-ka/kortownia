@@ -1,0 +1,227 @@
+/* ---------- Polityka prywatności ----------
+   Strona tekstowa: spis treści przyklejony z lewej, tekst w kolumnie 680 px.
+   Treść PL i EN w osobnych blokach, widoczny ten zgodny z html[lang]. */
+
+.legal {
+    width: min(100% - 2 * var(--corner-x), 1180px);
+    margin: 0 auto;
+    padding-top: clamp(48px, 7vw, 96px);
+}
+
+html[lang="pl"] .legal__lang[lang="en"],
+html[lang="en"] .legal__lang[lang="pl"] {
+    display: none;
+}
+
+.legal__head {
+    max-width: 760px;
+    margin-bottom: clamp(48px, 6vw, 80px);
+}
+
+.legal__eyebrow,
+.legal__toc-title {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 1.4;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.legal__eyebrow {
+    color: var(--pilka);
+    margin-bottom: 16px;
+}
+
+.legal__title {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 150%;
+    font-variation-settings: "wdth" 150;
+    font-size: clamp(32px, 5.2vw, 72px);
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+}
+
+.legal__lead {
+    margin-top: 24px;
+    max-width: 34em;
+    font-size: 18px;
+    line-height: 28px;
+    color: var(--kreda-85);
+}
+
+.legal__legend {
+    margin-top: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--kreda-85);
+}
+
+/* Dane przykładowe – do uzupełnienia (Figma: Design System → Do uzupełnienia). */
+.todo {
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: var(--blad);
+    color: var(--kreda);
+    outline: 1px dashed var(--kreda);
+    outline-offset: -1px;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
+.legal__body {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 680px);
+    column-gap: 220px;
+    align-items: start;
+}
+
+.legal__toc {
+    position: sticky;
+    top: 32px;
+    padding-top: 6px;
+}
+
+.legal__toc ol {
+    list-style: none;
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+
+.legal__toc a {
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--kreda-85);
+    transition: color 0.15s ease;
+}
+
+.legal__toc a:hover {
+    color: var(--kreda);
+    text-decoration: underline;
+    text-underline-position: from-font;
+}
+
+.legal__text section + section {
+    margin-top: 48px;
+}
+
+.legal__text section {
+    scroll-margin-top: 32px;
+}
+
+.legal__text h2 {
+    font-family: var(--font-display);
+    font-weight: 900;
+    font-stretch: 150%;
+    font-variation-settings: "wdth" 150;
+    font-size: 20px;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
+    margin-bottom: 16px;
+}
+
+.legal__text p,
+.legal__text li {
+    font-size: 16px;
+    line-height: 26px;
+    color: var(--kreda-85);
+}
+
+.legal__text p + p,
+.legal__text ul + p,
+.legal__text dl + p {
+    margin-top: 16px;
+}
+
+.legal__text ul {
+    list-style: none;
+    display: grid;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+/* Znacznik: piłka (jak „Dobrze wiedzieć” w cenniku) */
+.legal__text li {
+    position: relative;
+    padding-left: 22px;
+}
+
+.legal__text li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--pilka);
+}
+
+.legal__card {
+    margin-top: 16px;
+    border: 1px solid var(--kreda-30);
+    border-radius: 16px;
+}
+
+.legal__card div {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+    align-items: center;
+    padding: 12px 20px;
+}
+
+.legal__card div + div {
+    border-top: 1px solid var(--kreda-14);
+}
+
+.legal__card dt {
+    font-size: 14px;
+    color: var(--kreda-85);
+}
+
+.legal__card dd {
+    font-size: 16px;
+    line-height: 26px;
+}
+
+@media (max-width: 1023px) {
+    .legal {
+        width: calc(358 * var(--m));
+        padding-top: 40px;
+    }
+
+    .legal__head {
+        margin-bottom: 32px;
+    }
+
+    .legal__lead {
+        font-size: 16px;
+        line-height: 26px;
+    }
+
+    .legal__body {
+        grid-template-columns: 1fr;
+        row-gap: 40px;
+    }
+
+    .legal__toc {
+        position: static;
+        padding: 20px 0;
+        border-block: 1px solid var(--kreda-30);
+    }
+
+    .legal__text section + section {
+        margin-top: 36px;
+    }
+
+    .legal__text h2 {
+        font-size: 18px;
+    }
+
+    .legal__card div {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+}

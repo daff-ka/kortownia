@@ -153,7 +153,7 @@ img {
     line-height: 20px;
     padding: 16px 24px;
     white-space: nowrap;
-    transition: background-color 0.15s ease;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .btn--sm {
@@ -1532,6 +1532,16 @@ html:has(.booking[open]) {
     width: min(560px, 100% - 32px);
 }
 
+/* Na jasnym panelu hover i fokus w kolorze „siatka” (biały zlewa się z tłem). */
+.booking .btn--primary:hover {
+    background: var(--siatka);
+    color: var(--kreda);
+}
+
+.booking :focus-visible {
+    outline-color: var(--siatka);
+}
+
 .booking::backdrop {
     background: rgba(23, 35, 15, 0.6);
 }
@@ -1747,4 +1757,69 @@ legend.booking__label {
     .booking[open]::backdrop {
         animation: none;
     }
+}
+
+/* ---------- Podstrony (cennik, polityka prywatności) ---------- */
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.subpage-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    margin-top: clamp(80px, 9vw, 128px);
+    padding: 0 var(--corner-x);
+}
+
+.nav-link[aria-current="page"],
+.mobile-link[aria-current="page"] {
+    color: var(--pilka);
+}
+
+.subpage :is(.surface-switch, .credits) {
+    position: static;
+    transform: none;
+}
+
+/* Strona główna na desktopie mieści się w jednym ekranie (bez przewijania) –
+   podstrona jest dłuższa, więc przywracamy przewijanie w pionie. */
+@media (min-width: 1024px) {
+    html:has(body.subpage),
+    body.subpage {
+        height: auto;
+        overflow-y: visible;
+    }
+
+    body.subpage {
+        padding-bottom: 40px;
+    }
+}
+
+@media (max-width: 1023px) {
+    .subpage-foot {
+        flex-direction: column;
+        width: calc(358 * var(--m));
+        margin-inline: auto;
+        padding: 0;
+    }
+
+    body.menu-open :is(.subpage main, .subpage-foot) {
+        visibility: hidden;
+    }
+}
+
+.check__text a {
+    font-weight: 700;
+    color: var(--siatka);
+    text-decoration: underline;
+    text-underline-position: from-font;
 }
