@@ -48,6 +48,7 @@ if (document.fonts) document.fonts.ready.then(updateThumb);
 
 const translations = {
     pl: {
+        pageTitle: 'Kortownia – szkoła tenisa',
         navLabel: 'Główna',
         navCourt: 'Nasz kort',
         navAbout: 'O nas',
@@ -71,6 +72,7 @@ const translations = {
         kvHintTap: 'Stuknij, żeby odbić piłkę',
     },
     en: {
+        pageTitle: 'Kortownia – tennis school',
         navLabel: 'Main',
         navCourt: 'Our court',
         navAbout: 'About us',
@@ -101,6 +103,7 @@ function setLang(next) {
     lang = next;
     const dict = translations[lang];
     root.lang = lang;
+    document.title = dict.pageTitle;
     document.querySelectorAll('[data-i18n]').forEach((el) => {
         const text = dict[el.dataset.i18n];
         if (el.hasAttribute('data-i18n-breaks')) {
