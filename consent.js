@@ -10,14 +10,16 @@ const CONSENT_KEY = 'kortownia-consent';
     const i18n = window.pageI18n || (window.pageI18n = {});
     Object.assign((i18n.pl = i18n.pl || {}), {
         ckLabel: 'Pliki cookies',
-        ckText: 'Za Twoją zgodą używamy Microsoft Clarity (pliki cookies), żeby sprawdzić, jak korzystasz ze strony. Imienia i telefonu z formularza nie nagrywamy. Szczegóły w',
+        // Łamanie naturalne; \u00a0 (twarda spacja) wiąże jednoliterowe słowa z następnym
+        // i półpauzę z poprzednim – zgodnie z polską typografią.
+        ckText: 'Za Twoją zgodą używamy plików cookies do statystyk\u00a0– żeby sprawdzić, jak korzystasz ze strony i\u00a0co możemy w\u00a0niej poprawić. Danych z\u00a0formularza nie zapisujemy. Szczegóły w',
         ckLink: 'polityce prywatności',
         ckAccept: 'Akceptuję',
         ckDecline: 'Odrzucam',
     });
     Object.assign((i18n.en = i18n.en || {}), {
         ckLabel: 'Cookies',
-        ckText: 'With your consent we use Microsoft Clarity (cookies) to see how you use the site. We never record the name or phone number from the form. Details in our',
+        ckText: 'With your consent we use cookies for analytics – to see how you use the site and what we can improve. We never store what you type in the form. Details in our',
         ckLink: 'privacy policy',
         ckAccept: 'Accept',
         ckDecline: 'Decline',
@@ -59,12 +61,18 @@ const CONSENT_KEY = 'kortownia-consent';
     banner.hidden = true;
     banner.innerHTML = `
         <h2 class="consent__title" id="consent-title" data-i18n="ckLabel"></h2>
-        <p class="consent__text"><span data-i18n="ckText"></span> <a href="polityka-prywatnosci.html#cookies" data-i18n="ckLink"></a>.</p>
+        <p class="consent__text"><span data-i18n="ckText"></span>&nbsp;<a href="polityka-prywatnosci.html#cookies" data-i18n="ckLink"></a>.</p>
         <div class="consent__actions">
             <button class="btn btn--dark btn--sm" type="button" data-consent="granted" data-i18n="ckAccept"></button>
             <button class="btn btn--outline btn--sm" type="button" data-consent="denied" data-i18n="ckDecline"></button>
         </div>`;
     document.body.append(banner);
+
+    // Link do sekcji o cookies w polityce – kotwica zależy od języka.
+    const policyLink = banner.querySelector('.consent__text a');
+    document.addEventListener('kortownia:lang', (e) => {
+        policyLink.href = `polityka-prywatnosci.html#${e.detail === 'en' ? 'cookies-en' : 'cookies'}`;
+    });
 
     let opener = null;
 
