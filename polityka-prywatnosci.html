@@ -9,13 +9,19 @@
             var s = localStorage.getItem('kortownia-surface');
             if (s === 'ceglany' || s === 'twardy') document.documentElement.dataset.surface = s;
         } catch (e) {}
+        // Nawigacja animuje się tylko przy pierwszej stronie w sesji
+        // (przejścia między stronami – bez ponownego wejścia).
+        try {
+            if (sessionStorage.getItem('kortownia-nav-seen')) document.documentElement.classList.add('nav-seen');
+            sessionStorage.setItem('kortownia-nav-seen', '1');
+        } catch (e) {}
     </script>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anybody:wdth,wght@150,900&family=Atkinson+Hyperlegible+Next:wght@400;500;700&family=BBH+Bartle&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="style.css?v=2026-10-01b">
+    <link rel="stylesheet" href="style.css?v=2026-10-01f">
     <link rel="stylesheet" href="polityka.css?v=2026-10-01b">
     <title>Polityka prywatności – Kortownia</title>
     <meta name="description" content="Polityka prywatności szkoły tenisa Kortownia: jakie dane zbieramy przez formularz zapisu, po co, jak długo je przechowujemy i jakie masz prawa.">
@@ -316,7 +322,7 @@
     </script>
     <script src="booking.js?v=2026-10-01b"></script>
     <script src="consent.js?v=2026-10-01b"></script>
-    <script src="app.js?v=2026-10-01b"></script>
+    <script src="app.js?v=2026-10-01f"></script>
 
 </body>
 

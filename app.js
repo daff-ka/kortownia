@@ -301,3 +301,35 @@ try {
     savedLang = localStorage.getItem('kortownia-lang');
 } catch (e) {}
 setLang(savedLang in translations ? savedLang : 'pl');
+
+/* ---------- Podstrony: pojawianie się przy scrollu ---------- */
+
+// Nagłówek strony wchodzi przy wczytaniu (CSS), tabela cennika po nim
+// (cennik.js); reszta – gdy wjedzie w ekran.
+const REVEAL_SELECTOR = [
+    '.season-switch',
+    '.pricing__notes',
+    '.pricing__cta',
+    '.legal__toc',
+    '.legal__text > section',
+    '.subpage-foot',
+].join(', ');
+
+if (document.body.classList.contains('subpage')
+    && 'IntersectionObserver' in window
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            // Bez ujemnego marginesu – element przy samym dole strony
+            // (stopka) nie wjedzie wyżej, więc musi zadziałać od progu ekranu.
+            entry.target.classList.add('is-visible');
+            revealObserver.unobserve(entry.target);
+        });
+    });
+
+    document.querySelectorAll(REVEAL_SELECTOR).forEach((el) => {
+        el.classList.add('reveal');
+        revealObserver.observe(el);
+    });
+}

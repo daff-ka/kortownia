@@ -912,6 +912,12 @@ html.is-loaded :is(.nav, .hero__title, .hero__plus, .hero__copy, .surface-switch
         scale 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) var(--intro-delay, 0s);
 }
 
+/* Kolejna strona w tej samej sesji – nawigacja stoi od razu. */
+html.nav-seen.is-loading .nav {
+    opacity: 1;
+    translate: none;
+}
+
 .kv { --intro-delay: 0.15s; }
 .nav { --intro-delay: 0.3s; }
 .hero__title { --intro-delay: 0.35s; }
@@ -1790,6 +1796,51 @@ legend.booking__label {
     transform: none;
 }
 
+/* Wejście nagłówka i leadu – ten sam ruch co w hero (zanikanie + 18 px
+   w górę, odstęp 0.2 s między nagłówkiem a leadem). Podstrony nie mają
+   preloadera, więc animacja startuje od razu po wczytaniu. */
+.subpage :is(.nav, .pricing__eyebrow, .legal__eyebrow, .pricing__title, .legal__title, .pricing__lead, .legal__lead, .legal__legend) {
+    animation:
+        subpage-fade 0.8s ease var(--intro-delay, 0s) both,
+        subpage-rise 1s cubic-bezier(0.2, 0.8, 0.2, 1) var(--intro-delay, 0s) both;
+}
+
+.subpage :is(.pricing__eyebrow, .legal__eyebrow, .pricing__title, .legal__title) { --intro-delay: 0.1s; }
+.subpage .nav { --intro-delay: 0.2s; }
+.nav-seen .subpage .nav { animation: none; }
+.subpage :is(.pricing__lead, .legal__lead) { --intro-delay: 0.3s; }
+.subpage .legal__legend { --intro-delay: 0.45s; }
+
+@keyframes subpage-fade {
+    from { opacity: 0; }
+}
+
+@keyframes subpage-rise {
+    from { translate: 0 18px; }
+}
+
+/* Reszta treści pojawia się przy scrollu tym samym ruchem (klasy nadaje
+   app.js – bez JS wszystko jest widoczne od razu). */
+.reveal {
+    transition:
+        opacity 0.8s ease var(--reveal-delay, 0s),
+        translate 1s cubic-bezier(0.2, 0.8, 0.2, 1) var(--reveal-delay, 0s);
+}
+
+.reveal:not(.is-visible) {
+    opacity: 0;
+    translate: 0 18px;
+}
+
+/* Przełącznik sezonu (mobile) wchodzi razem z tabelą. */
+.season-switch.reveal { --reveal-delay: 0.6s; }
+
+@media (prefers-reduced-motion: reduce) {
+    .subpage :is(.nav, .pricing__eyebrow, .legal__eyebrow, .pricing__title, .legal__title, .pricing__lead, .legal__lead, .legal__legend) {
+        animation: none;
+    }
+}
+
 /* Strona główna na desktopie mieści się w jednym ekranie (bez przewijania) –
    podstrona jest dłuższa, więc przywracamy przewijanie w pionie. */
 @media (min-width: 1024px) {
@@ -1801,6 +1852,16 @@ legend.booking__label {
 
     body.subpage {
         padding-bottom: 40px;
+    }
+
+    /* Bez widocznego paska przewijania – inaczej zabiera szerokość
+       i nawigacja stoi w innym miejscu niż na stronie głównej. */
+    html:has(body.subpage) {
+        scrollbar-width: none;
+    }
+
+    html:has(body.subpage)::-webkit-scrollbar {
+        display: none;
     }
 }
 

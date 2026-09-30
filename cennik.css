@@ -61,7 +61,51 @@
 
 .price-court {
     position: relative;
-    border: 1px solid var(--kreda-30);
+    /* Obrys rysują linie z .price-court__lines (cennik.js). */
+    border: 1px solid transparent;
+}
+
+.price-court__lines {
+    position: absolute;
+    inset: -1px;
+    pointer-events: none;
+}
+
+.price-court__line {
+    position: absolute;
+    background: var(--kreda-14);
+    transform-origin: left center;
+}
+
+.price-court__line--top,
+.price-court__line--bottom,
+.price-court__line--row,
+.price-court__line--row-strong {
+    left: 0;
+    width: 100%;
+    height: 1px;
+}
+
+.price-court__line--top { top: 0; }
+.price-court__line--bottom { bottom: 0; transform-origin: right center; }
+
+.price-court__line--left,
+.price-court__line--right {
+    top: 0;
+    width: 1px;
+    height: 100%;
+    transform-origin: center top;
+}
+
+.price-court__line--left { left: 0; }
+.price-court__line--right { right: 0; }
+
+.price-court__line--top,
+.price-court__line--bottom,
+.price-court__line--left,
+.price-court__line--right,
+.price-court__line--row-strong {
+    background: var(--kreda-30);
 }
 
 .price-court__net {
@@ -111,7 +155,6 @@
 .price-table thead th {
     padding-top: 28px;
     padding-bottom: 24px;
-    border-bottom: 1px solid var(--kreda-30);
     vertical-align: bottom;
 }
 
@@ -154,7 +197,6 @@
 .price-group__head th {
     padding-top: 44px;
     padding-bottom: 14px;
-    border-bottom: 1px solid var(--kreda-30);
 }
 
 .price-group:first-of-type .price-group__head th {
@@ -174,12 +216,7 @@
 
 /* Wiersze */
 .price-row > * {
-    border-bottom: 1px solid var(--kreda-14);
     transition: background-color 0.15s ease;
-}
-
-.price-group:last-of-type .price-row:last-child > * {
-    border-bottom: 0;
 }
 
 .price-row:hover > * {
@@ -247,21 +284,34 @@
     line-height: 28px;
 }
 
-/* Wejście: siatka „rozwija się” z góry, wiersze pojawiają się po niej. */
-.price-court:not(.is-ready) .price-court__net {
+/* Wejście: linie kortu rysują się jak grid na stronie głównej, siatka
+   rozwija się z góry, a wiersze delikatnie wchodzą po kolei za swoją linią. */
+.price-court:not(.is-ready) :is(.price-court__line--top, .price-court__line--bottom, .price-court__line--row, .price-court__line--row-strong) {
+    scale: 0 1;
+}
+
+.price-court:not(.is-ready) :is(.price-court__line--left, .price-court__line--right, .price-court__net) {
     scale: 1 0;
 }
 
-.price-court:not(.is-ready) tbody {
+.price-court.is-ready :is(.price-court__line, .price-court__net) {
+    transition: scale 1.3s cubic-bezier(0.65, 0, 0.2, 1) var(--line-delay, 0s);
+}
+
+.price-court__net {
+    --line-delay: var(--net-delay, 0.25s);
+}
+
+.price-court:not(.is-ready) tr > * {
     opacity: 0;
+    translate: 0 6px;
 }
 
-.price-court.is-ready .price-court__net {
-    transition: scale 0.9s cubic-bezier(0.65, 0, 0.35, 1);
-}
-
-.price-court.is-ready tbody {
-    transition: opacity 0.5s ease 0.3s;
+.price-court.is-ready tr > * {
+    transition:
+        opacity 0.6s ease var(--row-delay, 0s),
+        translate 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) var(--row-delay, 0s),
+        background-color 0.15s ease;
 }
 
 /* ---------- Dobrze wiedzieć + CTA ---------- */
@@ -419,10 +469,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .price-court .price-court__net,
-    .price-court tbody {
+    .price-court :is(.price-court__line, .price-court__net),
+    .price-court tr > * {
         transition: none !important;
         scale: none !important;
+        translate: none !important;
         opacity: 1 !important;
     }
 }

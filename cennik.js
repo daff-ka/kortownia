@@ -44,6 +44,8 @@ window.pageI18n = {
 
     const court = document.querySelector('.price-court');
     const table = court.querySelector('.price-table');
+    // Start animacji tabeli, ms od wczytania strony.
+    const TABLE_DELAY = 700;
     const notesList = document.querySelector('[data-notes]');
     const updatedEl = document.querySelector('[data-updated]');
 
@@ -118,9 +120,54 @@ window.pageI18n = {
         updatedEl.textContent = `${t('updated')} ${date.toLocaleDateString(lang === 'pl' ? 'pl-PL' : 'en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}`;
     }
 
+    /* Szkielet tabeli: linie rysują się jak grid na stronie głównej
+       (krawędzie kortu + linia pod każdym wierszem). Pozycje z układu
+       tabeli, przeliczane przy każdej zmianie rozmiaru. */
+    const lines = el('div', 'price-court__lines');
+    lines.setAttribute('aria-hidden', 'true');
+    court.prepend(lines);
+
+    // Opóźnienia (s) od startu wejścia tabeli.
+    const EDGE_DELAY = { top: 0, left: 0.1, bottom: 0.4, right: 0.5 };
+    const ROW_START = 0.15;
+    const ROW_STEP = 0.05;
+    court.style.setProperty('--net-delay', `${ROW_START + 0.1}s`);
+
+    function line(kind, delay) {
+        const node = el('i', `price-court__line price-court__line--${kind}`);
+        node.style.setProperty('--line-delay', `${delay}s`);
+        return node;
+    }
+
+    Object.entries(EDGE_DELAY).forEach(([edge, delay]) => lines.append(line(edge, delay)));
+    let rowLines = [];
+
+    // Linie wierszy tworzymy raz na zestaw wierszy (np. po zmianie języka);
+    // przy zmianie rozmiaru tylko je przesuwamy, żeby nie przerwać rysowania.
+    function layout() {
+        const rows = [...table.querySelectorAll('tr')].slice(0, -1); // ostatnią zastępuje dolna krawędź
+        if (rowLines.length !== rows.length) {
+            rowLines.forEach((node) => node.remove());
+            rowLines = rows.map((row, i) => {
+                const delay = ROW_START + i * ROW_STEP;
+                const strong = row.parentElement.tagName === 'THEAD' || row.classList.contains('price-group__head');
+                return lines.appendChild(line(strong ? 'row-strong' : 'row', delay));
+            });
+        }
+        const top = lines.getBoundingClientRect().top;
+        table.querySelectorAll('tr').forEach((row, i) => {
+            // Treść wiersza wchodzi tuż za jego linią.
+            row.style.setProperty('--row-delay', `${ROW_START + i * ROW_STEP + 0.2}s`);
+            if (rowLines[i]) rowLines[i].style.top = `${Math.round(row.getBoundingClientRect().bottom - top) - 1}px`;
+        });
+    }
+
+    new ResizeObserver(layout).observe(table);
+
     document.addEventListener('kortownia:lang', (e) => {
         lang = e.detail;
         render();
+        layout();
     });
 
     fetch('data/cennik.json', { cache: 'no-cache' })
@@ -131,7 +178,9 @@ window.pageI18n = {
         .then((json) => {
             data = json;
             render();
-            court.classList.add('is-ready');
+            layout();
+            // Tabela wchodzi chwilę po nagłówku i leadzie (style.css – podstrony).
+            setTimeout(() => court.classList.add('is-ready'), Math.max(0, TABLE_DELAY - performance.now()));
         })
         .catch(() => {
             court.replaceWith(el('p', 'pricing__error', t('loadError')));
@@ -143,6 +192,7 @@ window.pageI18n = {
         btn.addEventListener('click', () => {
             court.dataset.season = btn.dataset.season;
             seasonButtons.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+            layout();
         });
     });
 })();
