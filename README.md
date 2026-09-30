@@ -16,6 +16,12 @@ python3 -m http.server 8000
 
 i otwórz http://localhost:8000. Linie kortu z makiety Figma: `?grid=figma`.
 
+## Wdrożenie
+
+GitHub Pages trzyma pliki w pamięci przeglądarki 10 minut. Pliki CSS/JS są
+wczytywane z `?v=RRRR-MM-DD` – przy każdym wdrożeniu zmień tę wersję we wszystkich
+plikach HTML (np. `sed -i '' 's/?v=[0-9-]*/?v=NOWA/g' *.html`).
+
 ## Struktura
 
 - `index.html`, `style.css` – układ i style

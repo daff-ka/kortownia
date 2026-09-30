@@ -115,6 +115,8 @@ function setLang(next) {
     document.title = dict.pageTitle;
     document.querySelectorAll('[data-i18n]').forEach((el) => {
         const text = dict[el.dataset.i18n];
+        // Brak tłumaczenia (np. stary app.js z pamięci przeglądarki) – zostaje tekst z HTML.
+        if (text == null) return;
         if (el.hasAttribute('data-i18n-breaks')) {
             el.textContent = '';
             text.split(/(\|[dm])/).forEach((part) => {
@@ -131,7 +133,8 @@ function setLang(next) {
         }
     });
     document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
-        el.setAttribute('aria-label', dict[el.dataset.i18nAria]);
+        const label = dict[el.dataset.i18nAria];
+        if (label != null) el.setAttribute('aria-label', label);
     });
     langButtons.forEach((btn) => {
         btn.setAttribute('aria-checked', String(btn.dataset.lang === lang));
