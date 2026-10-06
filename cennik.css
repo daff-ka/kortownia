@@ -379,7 +379,8 @@
     .pricing {
         --col-offer: 62%;
         --col-season: 38%;
-        width: calc(358 * var(--m));
+        /* Treść na linii logo (16 px wewnątrz paska nawigacji). */
+        width: calc(358 * var(--m) - 32px);
         padding-top: 40px;
     }
 
@@ -395,6 +396,7 @@
     .season-switch {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 12px;
         margin-bottom: 24px;
     }

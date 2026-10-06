@@ -188,7 +188,8 @@ html[lang="en"] .legal__lang[lang="pl"] {
 
 @media (max-width: 1023px) {
     .legal {
-        width: calc(358 * var(--m));
+        /* Treść na linii logo (16 px wewnątrz paska nawigacji). */
+        width: calc(358 * var(--m) - 32px);
         padding-top: 40px;
     }
 
